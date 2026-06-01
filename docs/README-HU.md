@@ -25,7 +25,7 @@ A RustDesk szívesen fogad minden contributiont, támogatást mindenkitől. Lás
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 
 ## Dependencies
 

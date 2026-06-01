@@ -32,7 +32,7 @@ RustDesk 期待各位的贡�? 如何参与开�? 详情请看 [CONTRIBUTING-ZH.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 
 ## 依赖
 

@@ -33,10 +33,10 @@ RustDesk приветствует вклад каждого. Ознакомьт�
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 [<img src="https://flathub.org/api/badge?svg&locale=en"
     alt="Get it on Flathub"
-    height="80">](https://flathub.org/apps/com.vlanl.Svahost)
+    height="80">](https://flathub.org/apps/com.vlanl.svahost)
 
 ## Зависимости
 

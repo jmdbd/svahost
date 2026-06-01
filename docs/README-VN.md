@@ -27,7 +27,7 @@ RustDesk là một phần mềm điểu khiển máy tính t�?xa mã nguồn m�
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 
 ## Dependencies
 

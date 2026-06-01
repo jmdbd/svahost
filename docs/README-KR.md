@@ -31,10 +31,10 @@ RustDesk�?모든 분들�?기여�?환영합니�? 시작하는 �?도움�?필
 
 [<img src="https://f-droid.org/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 [<img src="https://flathub.org/api/badge?svg&locale=en"
     alt="Get it on Flathub"
-    height="80">](https://flathub.org/apps/com.vlanl.Svahost)
+    height="80">](https://flathub.org/apps/com.vlanl.svahost)
 
 ## 종속�?
 

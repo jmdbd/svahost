@@ -28,7 +28,7 @@ RustDeskは皆さんの貢献を歓迎します�?
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="F-Droidで入手す�?
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 
 ## 依存関係
 

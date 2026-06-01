@@ -4,7 +4,7 @@ version = "1.4.6"
 authors = ["rustdesk <info@vlanl.com>"]
 edition = "2021"
 build= "build.rs"
-description = "Svahost Remote Desktop"
+description = "svahost Remote Desktop"
 default-run = "rustdesk"
 rust-version = "1.75"
 
@@ -214,9 +214,9 @@ libxdo-sys = { path = "libs/libxdo-sys-stub" }
 
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2025 vlanl. All rights reserved."
-ProductName = "Svahost"
-FileDescription = "Svahost Remote Desktop"
-OriginalFilename = "Svahost.exe"
+ProductName = "svahost"
+FileDescription = "svahost Remote Desktop"
+OriginalFilename = "svahost.exe"
 
 [target.'cfg(target_os="windows")'.build-dependencies]
 winres = "0.1"

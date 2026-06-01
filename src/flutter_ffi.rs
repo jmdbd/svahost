@@ -2844,7 +2844,7 @@ pub fn main_get_common(key: String) -> String {
                 crate::platform::windows::is_msi_installed(),
                 crate::common::is_custom_client(),
             ) {
-                // Svahost: �?MSI 的自定义客户端也使用 .exe 格式
+                // svahost: �?MSI 的自定义客户端也使用 .exe 格式
                 (Ok(true), false) => format!("{app_name}-{_version}-x86_64.msi"),
                 (Ok(true), true) | (Ok(false), _) => format!("{app_name}-{_version}-x86_64.exe"),
                 (Err(e), _) => {
@@ -2864,7 +2864,7 @@ pub fn main_get_common(key: String) -> String {
             }
             #[cfg(target_os = "android")]
             {
-                // Svahost: Android 支持自动更新下载
+                // svahost: Android 支持自动更新下载
                 return if cfg!(target_arch = "aarch64") {
                     format!("{app_name}-{_version}-aarch64.apk")
                 } else if cfg!(target_arch = "arm") {

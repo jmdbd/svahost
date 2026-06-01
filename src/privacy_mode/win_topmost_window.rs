@@ -29,9 +29,9 @@ use winapi::{
 pub(super) const PRIVACY_MODE_IMPL: &str = "privacy_mode_impl_mag";
 
 pub const ORIGIN_PROCESS_EXE: &'static str = "C:\\Windows\\System32\\RuntimeBroker.exe";
-pub const WIN_TOPMOST_INJECTED_PROCESS_EXE: &'static str = "RuntimeBroker_Svahost.exe";
+pub const WIN_TOPMOST_INJECTED_PROCESS_EXE: &'static str = "RuntimeBroker_svahost.exe";
 pub const INJECTED_PROCESS_EXE: &'static str = WIN_TOPMOST_INJECTED_PROCESS_EXE;
-pub(super) const PRIVACY_WINDOW_NAME: &'static str = "SvahostPrivacyWindow";
+pub(super) const PRIVACY_WINDOW_NAME: &'static str = "svahostPrivacyWindow";
 
 struct WindowHandlers {
     hthread: u64,

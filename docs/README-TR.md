@@ -33,7 +33,7 @@ RustDesk, herkesin katkısına açıktır. Başlamak için [CONTRIBUTING.md](CON
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="F-Droid'de Alın"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.svahost)
 
 ## Gereksinimler
 
