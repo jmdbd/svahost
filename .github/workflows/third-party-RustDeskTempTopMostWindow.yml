@@ -26,6 +26,28 @@ on:
             required: true
             type: string
             default: 'Windows10'
+  workflow_dispatch:
+    inputs:
+        upload-artifact:
+            description: 'Upload artifact'
+            required: false
+            default: 'true'
+        target:
+            description: 'Target'
+            required: true
+            default: 'windows-2022'
+        configuration:
+            description: 'Configuration'
+            required: true
+            default: 'Release'
+        platform:
+            description: 'Platform'
+            required: true
+            default: 'x64'
+        target_version:
+            description: 'TargetVersion'
+            required: true
+            default: 'Windows10'
 
 env:
   project_path: WindowInjection/WindowInjection.vcxproj
@@ -53,7 +75,7 @@ jobs:
 
       - name: Archive build artifacts
         uses: actions/upload-artifact@master
-        if: ${{ inputs.upload-artifact }}
+        if: ${{ inputs.upload-artifact == true || inputs.upload-artifact == 'true' }}
         with:
             name: topmostwindow-artifacts
             path: |
