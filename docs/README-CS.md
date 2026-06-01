@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="../res/logo-header.svg" alt="RustDesk – vaše vzdálená plocha"><br>
-  <a href="#free-public-servers">Servery</a> •
-  <a href="#raw-steps-to-build">Sestavení ze zdrojových kódů</a> •
-  <a href="#how-to-build-with-docker">Docker</a> •
-  <a href="#file-structure">Struktura</a> •
+  <img src="../res/logo-header.svg" alt="RustDesk �?vaše vzdálená plocha"><br>
+  <a href="#free-public-servers">Servery</a> �?
+  <a href="#raw-steps-to-build">Sestavení ze zdrojových kódů</a> �?
+  <a href="#how-to-build-with-docker">Docker</a> �?
+  <a href="#file-structure">Struktura</a> �?
   <a href="#snapshot">Ukázky</a><br>
-  [<a href="../README.md">English</a>] | [<a href="README-UA.md">Українська</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本語</a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국어</a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-GR.md">Ελληνικά</a>]<br>
+  [<a href="../README.md">English</a>] | [<a href="README-UA.md">Українська</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本�?/a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국�?/a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-GR.md">Ελληνικά</a>]<br>
   <b>Potřebujeme Vaši pomoc s překladem tohoto README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">uživatelského rozhraní aplikace RustDesk</a> a <a href="https://github.com/rustdesk/doc.vlanl.com">dokumentace k ní</a> do vašeho jazyka</b>
 </p>
 
@@ -14,7 +14,7 @@ Popovídejte si s námi: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](ht
 
 [![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Pokro%C4%8Dil%C3%A9%20Funkce-blue)](https://vlanl.com/pricing.html)
 
-Zase další software pro přístup k ploše na dálku, naprogramovaný v jazyce Rust. Funguje hned tak, jak je – není třeba žádného nastavování. Svá data máte ve svých rukách, bez obav o zabezpečení. Je možné používat námi poskytovaný propojovací/předávací (relay) server, [vytvořit si svůj vlastní](https://vlanl.com/server), nebo [si dokonce svůj vlastní naprogramovat](https://github.com/rustdesk/rustdesk-server-demo), budete-li chtít.
+Zase další software pro přístup k ploše na dálku, naprogramovaný v jazyce Rust. Funguje hned tak, jak je �?není třeba žádného nastavování. Svá data máte ve svých rukách, bez obav o zabezpečení. Je možné používat námi poskytovaný propojovací/předávací (relay) server, [vytvořit si svůj vlastní](https://vlanl.com/server), nebo [si dokonce svůj vlastní naprogramovat](https://github.com/rustdesk/rustdesk-server-demo), budete-li chtít.
 
 Projekt RustDesk vítá přiložení ruky k dílu od každého. Jak začít se dozvíte z [`docs/CONTRIBUTING.md`](CONTRIBUTING.md).
 
@@ -24,7 +24,7 @@ Projekt RustDesk vítá přiložení ruky k dílu od každého. Jak začít se d
 
 ## Softwarové součásti, na kterých závisí
 
-Varianta pro počítač používá pro grafické uživatelské rozhraní [sciter](https://sciter.com/) – stáhněte si potřebnou knihovnu.
+Varianta pro počítač používá pro grafické uživatelské rozhraní [sciter](https://sciter.com/) �?stáhněte si potřebnou knihovnu.
 
 [Windows](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.win/x64/sciter.dll) |
 [Linux](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so) |
@@ -119,7 +119,7 @@ Poté pokaždé, když bude třeba aplikaci sestavit, spusťte následující p�
 docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user/.cargo/git -v rustdesk-registry-cache:/home/user/.cargo/registry -e PUID="$(id -u)" -e PGID="$(id -g)" rustdesk-builder
 ```
 
-Všimněte si, že prvotní sestavení může trvat déle (než se do mezipaměti uloží veškeré softwarové součásti, které jsou potřeba) – následná opakování už budou rychlejší. Pokud navíc potřebujete zadat různé argumenty příkazu pro sestavení, můžete tak učinit na konci příkazu v pozici `<OPTIONAL-ARGS>`. Například, pokud byste chtěli sestavit optimalizovanou verzi pro vydání, spustili byste výše uvedený příkaz následovaný `--release`. Výsledný spustitelný soubor se objeví v cílové složce na vašem systému a bude ho možné spustit pomocí:
+Všimněte si, že prvotní sestavení může trvat déle (než se do mezipaměti uloží veškeré softwarové součásti, které jsou potřeba) �?následná opakování už budou rychlejší. Pokud navíc potřebujete zadat různé argumenty příkazu pro sestavení, můžete tak učinit na konci příkazu v pozici `<OPTIONAL-ARGS>`. Například, pokud byste chtěli sestavit optimalizovanou verzi pro vydání, spustili byste výše uvedený příkaz následovaný `--release`. Výsledný spustitelný soubor se objeví v cílové složce na vašem systému a bude ho možné spustit pomocí:
 
 ```sh
 target/debug/rustdesk
@@ -141,7 +141,7 @@ Ujistěte se, že tyto příkazy spouštíte z kořenového adresáře RustDesk,
 - **[src/ui](https://github.com/rustdesk/rustdesk/tree/master/src/ui)**: grafické uživatelské rozhraní
 - **[src/server](https://github.com/rustdesk/rustdesk/tree/master/src/server)**: služby pro zvuk/schránku/zadávání/video a síťová spojení
 - **[src/client.rs](https://github.com/rustdesk/rustdesk/tree/master/src/client.rs)**: spouští připojení k protějšku
-- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: komunikace s [rustdesk-server](https://github.com/rustdesk/rustdesk-server), očekávání vzdálených příméhých („proděrováváním“ TCP) nebo předávaných (relay) spojení
+- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: komunikace s [rustdesk-server](https://github.com/rustdesk/rustdesk-server), očekávání vzdálených příméhých („proděrováváním�?TCP) nebo předávaných (relay) spojení
 - **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: zdrojové kódy, specifické pro jednotlivé platformy
 - **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: zdrojové kódy pro použití s aplikačním rámcem (framework) Flutter pro mobilní platformy
 - **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/js)**: Javascript pro Flutter webový klient

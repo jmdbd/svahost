@@ -458,7 +458,7 @@ pub fn core_main() -> Option<Vec<String>> {
                 println!("Unlock PIN is disabled!");
                 return None;
             }
-            // 以下原逻辑暂时不可达，保留以便后续恢复custom.txt机制后还原
+            // 以下原逻辑暂时不可达，保留以便后续恢复custom.txt机制后还�?
             if false && config::Config::is_disable_unlock_pin() {
                 println!("Unlock PIN is disabled!");
                 return None;

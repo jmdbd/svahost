@@ -145,8 +145,8 @@ impl InvokeUiSession for SciterHandler {
         let scale = if scale <= 0.0 { 1.0 } else { scale };
         self.call("setDisplay", &make_args!(x, y, w, h, cursor_embedded, scale));
         // https://sciter.com/forums/topic/color_spaceiyuv-crash
-        // Nothing spectacular in decoder â€“ done on CPU side.
-        // So if you can do BGRA translation on your side â€“ the better.
+        // Nothing spectacular in decoder â€?done on CPU side.
+        // So if you can do BGRA translation on your side â€?the better.
         // BGRA is used as internal image format so it will not require additional transformations.
         VIDEO.lock().unwrap().as_mut().map(|v| {
             v.stop_streaming().ok();

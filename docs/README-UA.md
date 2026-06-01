@@ -1,11 +1,11 @@
 <p align="center">
   <img src="../res/logo-header.svg" alt="RustDesk - Ваша віддалена стільниця"><br>
-  <a href="#публічні-сервери">Сервери</a> •
-  <a href="#кроки-для-збірки">Збирання</a> •
-  <a href="#як-зібрати-за-допомогою-docker">Docker</a> •
-  <a href="#структура-файлів">Структура</a> •
+  <a href="#публічні-сервери">Сервери</a> �?
+  <a href="#кроки-для-збірки">Збирання</a> �?
+  <a href="#як-зібрати-за-допомогою-docker">Docker</a> �?
+  <a href="#структура-файлів">Структура</a> �?
   <a href="#знімки-екрана">Знімки екрана</a><br>
-  [<a href="../README.md">English</a>] | [<a href="README-CS.md">česky</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本語</a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국어</a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-DA.md">Dansk</a>] | [<a href="README-GR.md">Ελληνικά</a>] | [<a href="README-TR.md">Türkçe</a>]<br>
+  [<a href="../README.md">English</a>] | [<a href="README-CS.md">česky</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本�?/a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국�?/a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-DA.md">Dansk</a>] | [<a href="README-GR.md">Ελληνικά</a>] | [<a href="README-TR.md">Türkçe</a>]<br>
   <b>Нам потрібна ваша допомога для перекладу цього README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">інтерфейсу</a> та <a href="https://github.com/rustdesk/doc.vlanl.com">документації</a> RustDesk вашою рідною мовою</B>
 </p>
 
@@ -27,7 +27,7 @@ RustDesk вітає внесок кожного. Ознайомтеся з [CONT
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
     alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.vlanl.securedesk)
+    height="80">](https://f-droid.org/en/packages/com.vlanl.Svahost)
 
 ## Залежності
 

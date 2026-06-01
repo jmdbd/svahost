@@ -28,7 +28,7 @@ mkdir -p "%{buildroot}/usr/share/rustdesk" && cp -r ${HBB}/flutter/build/linux/x
 mkdir -p "%{buildroot}/usr/bin"
 install -Dm 644 $HBB/res/rustdesk.service -t "%{buildroot}/usr/share/rustdesk/files"
 install -Dm 644 $HBB/res/rustdesk.desktop -t "%{buildroot}/usr/share/rustdesk/files"
-install -Dm 644 $HBB/res/securedesk-link.desktop -t "%{buildroot}/usr/share/rustdesk/files"
+install -Dm 644 $HBB/res/Svahost-link.desktop -t "%{buildroot}/usr/share/rustdesk/files"
 install -Dm 644 $HBB/res/128x128@2x.png "%{buildroot}/usr/share/icons/hicolor/256x256/apps/rustdesk.png"
 install -Dm 644 $HBB/res/scalable.svg "%{buildroot}/usr/share/icons/hicolor/scalable/apps/rustdesk.svg"
 
@@ -38,7 +38,7 @@ install -Dm 644 $HBB/res/scalable.svg "%{buildroot}/usr/share/icons/hicolor/scal
 /usr/share/icons/hicolor/256x256/apps/rustdesk.png
 /usr/share/icons/hicolor/scalable/apps/rustdesk.svg
 /usr/share/rustdesk/files/rustdesk.desktop
-/usr/share/rustdesk/files/securedesk-link.desktop
+/usr/share/rustdesk/files/Svahost-link.desktop
 
 %changelog
 # let's skip this for now
@@ -58,7 +58,7 @@ esac
 %post
 cp /usr/share/rustdesk/files/rustdesk.service /etc/systemd/system/rustdesk.service
 cp /usr/share/rustdesk/files/rustdesk.desktop /usr/share/applications/
-cp /usr/share/rustdesk/files/securedesk-link.desktop /usr/share/applications/
+cp /usr/share/rustdesk/files/Svahost-link.desktop /usr/share/applications/
 ln -sf /usr/share/rustdesk/rustdesk /usr/bin/rustdesk
 systemctl daemon-reload
 systemctl enable rustdesk
@@ -87,7 +87,7 @@ case "$1" in
     rmdir /usr/local/rustdesk || true
     rmdir /usr/share/rustdesk || true
     rm /usr/share/applications/rustdesk.desktop || true
-    rm /usr/share/applications/securedesk-link.desktop || true
+    rm /usr/share/applications/Svahost-link.desktop || true
     update-desktop-database
   ;;
   1)
