@@ -147,7 +147,7 @@ pub mod client {
                 }
             } else {
                 handle_key(true, key.clone(), self.conn.clone(), &self.session)?;
-                // Update modifier state only after successful send â€?
+                // Update modifier state only after successful send â€”
                 // if handle_key fails, we don't want stale "pressed" state
                 // affecting subsequent key event decisions.
                 self.modifier_state.update(&key, true);

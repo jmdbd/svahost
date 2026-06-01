@@ -1,4 +1,4 @@
-package com.vlanl.securedesk
+package com.vlanl.svahost
 
 /**
  * Handle remote input and dispatch android gesture

@@ -616,7 +616,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   buildRightPane(BuildContext context) {
     return Container(
       color: Colors.white,
-      child: const SecureDeskRightPanel(),
+      child: const svahostRightPanel(),
     );
   }
 
@@ -865,12 +865,12 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   Widget buildHelpCards(String updateUrl) {
-    // SecureDesk: 移除 isCustomClient 和 uriPrefix 限制，允许自定义客户端显示更新卡片
+    // svahost: 移除 isCustomClient 和 uriPrefix 限制，允许自定义客户端显示更新卡片
     if (updateUrl.isNotEmpty && !isCardClosed) {
       final isToUpdate = (isWindows || isMacOS) && bind.mainIsInstalled();
       String btnText = isToUpdate ? 'Update' : 'Download';
       GestureTapCallback onPressed = () async {
-        // SecureDesk: 非 Windows/macOS 已安装场景，打开浏览器下载
+        // svahost: 非 Windows/macOS 已安装场景，打开浏览器下载
         // 必须拼上文件名，否则 download.php 返回 404
         String downloadBase = updateUrl.replaceAll('tag', 'download');
         String version =
@@ -895,7 +895,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           closeButton: true,
           help: isToUpdate ? 'Changelog' : null,
           link: isToUpdate
-              ? 'https://github.com/vlanl/SecureDesk/releases/tag/${bind.mainGetNewVersion()}'
+              ? 'https://github.com/vlanl/svahost/releases/tag/${bind.mainGetNewVersion()}'
               : null);
     }
     if (systemError.isNotEmpty) {

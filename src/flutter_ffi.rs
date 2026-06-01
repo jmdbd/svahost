@@ -2844,7 +2844,7 @@ pub fn main_get_common(key: String) -> String {
                 crate::platform::windows::is_msi_installed(),
                 crate::common::is_custom_client(),
             ) {
-                // svahost: �?MSI 的自定义客户端也使用 .exe 格式
+                // svahost: 非 MSI 的自定义客户端也使用 .exe 格式
                 (Ok(true), false) => format!("{app_name}-{_version}-x86_64.msi"),
                 (Ok(true), true) | (Ok(false), _) => format!("{app_name}-{_version}-x86_64.exe"),
                 (Err(e), _) => {

@@ -1,4 +1,4 @@
-package com.vlanl.securedesk
+package com.vlanl.svahost
 
 import android.Manifest.permission.*
 import android.annotation.SuppressLint

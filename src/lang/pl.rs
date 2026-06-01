@@ -279,7 +279,7 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("android_input_permission_tip1", "Aby można było sterować Twoim urządzeniem za pomocą myszy lub dotyku, musisz zezwolić svahost na korzystanie z usługi \"Ułatwienia dostępu\"."),
         ("android_input_permission_tip2", "Przejdź do następnej strony ustawień systemowych, znajdź i wejdź w [Zainstalowane usługi], włącz usługę [svahost Input]."),
         ("android_new_connection_tip", "Otrzymano nowe żądanie zdalnego dostępu, które chce przejąć kontrolę nad Twoim urządzeniem."),
-        ("android_service_will_start_tip", "Włączenie opcji „Przechwytywanie ekranu�?spowoduje automatyczne uruchomienie usługi, umożliwiając innym urządzeniom żądanie połączenia z Twoim urządzeniem."),
+        ("android_service_will_start_tip", "Włączenie opcji „Przechwytywanie ekranu” spowoduje automatyczne uruchomienie usługi, umożliwiając innym urządzeniom żądanie połączenia z Twoim urządzeniem."),
         ("android_stop_service_tip", "Zamknięcie usługi spowoduje automatyczne zamknięcie wszystkich nawiązanych połączeń."),
         ("android_version_audio_tip", "Bieżąca wersja systemu Android nie obsługuje przechwytywania dźwięku, zaktualizuj system do wersji Android 10 lub nowszej."),
         ("android_start_service_tip", "Kliknij [Uruchom serwis] lub włącz uprawnienia [Zrzuty ekranu], aby uruchomić usługę udostępniania ekranu."),

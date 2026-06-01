@@ -84,7 +84,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
       slivers: [
         SliverList(
             delegate: SliverChildListDelegate([
-          // SecureDesk: 允许自定义客户端也显示更新提示
+          // svahost: 允许自定义客户端也显示更新提示
           if (!isIOS)
             Obx(() => _buildUpdateUI(stateGlobal.updateUrl.value)),
           _buildRemoteIDTextField(),
@@ -125,7 +125,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
         ? const SizedBox(height: 0)
         : InkWell(
             onTap: () async {
-              // SecureDesk: 使用服务端返回的下载地址
+              // svahost: 使用服务端返回的下载地址
               String downloadBase = updateUrl.replaceAll('tag', 'download');
               String version =
                   downloadBase.substring(downloadBase.lastIndexOf('/') + 1);

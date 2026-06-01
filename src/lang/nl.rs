@@ -684,7 +684,7 @@ pub static ref T: std::collections::HashMap<&'static str, &'static str> =
         ("{}-to-update-tip", "{} zal sluiten en de nieuwe versie installeren."),
         ("download-new-version-failed-tip", "Fout bij het downloaden. Je kunt het opnieuw proberen of op de knop Downloaden klikken om de applicatie van de officiële website te downloaden en handmatig bij te werken."),
         ("Auto update", "Automatisch updaten"),
-        ("update-failed-check-msi-tip", "Kan de installatiemethode niet bepalen. Klik op “Downloaden�?om de applicatie van de officiële website te downloaden en handmatig bij te werken."),
+        ("update-failed-check-msi-tip", "Kan de installatiemethode niet bepalen. Klik op “Downloaden” om de applicatie van de officiële website te downloaden en handmatig bij te werken."),
         ("websocket_tip", "Het WebSocketprotocol ondersteunt alleen verbindingen met de repeater."),
         ("Use WebSocket", "Gebruik het WebSocketprotocol"),
         ("Trackpad speed", "Snelheid Trackpad"),

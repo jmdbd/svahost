@@ -1,4 +1,4 @@
-package com.vlanl.securedesk
+package com.vlanl.svahost
 
 import android.annotation.SuppressLint
 import android.app.PendingIntent
@@ -303,7 +303,7 @@ class FloatingWindowService : Service(), View.OnTouchListener {
      private fun showPopupMenu() {
          val popupMenu = PopupMenu(this, floatingView)
          val idShowSecuredesk = 0
-         popupMenu.menu.add(0, idShowSecuredesk, 0, translate("Show SecureDesk"))
+         popupMenu.menu.add(0, idShowSecuredesk, 0, translate("Show svahost"))
          // For host side, clipboard sync
          val idSyncClipboard = 1
          val isServiceSyncEnabled = (MainActivity.rdClipboardManager?.isCaptureStarted ?: false) && FFI.isServiceClipboardEnabled()
