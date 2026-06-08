@@ -46,6 +46,13 @@ env:
   MACOS_P12_BASE64: "${{ secrets.MACOS_P12_BASE64 }}"
   UPLOAD_ARTIFACT: "${{ inputs.upload-artifact }}"
   SIGN_BASE_URL: "${{ secrets.SIGN_BASE_URL }}-2"
+  #Repository secrets for compile-time injection (hbb_common build.rs → option_env!)
+  APP_NAME: "${{ secrets.APP_NAME }}"
+  RENDEZVOUS_SERVER: "${{ secrets.RENDEZVOUS_SERVER }}"
+  RELAY_SERVER: "${{ secrets.RELAY_SERVER }}"
+  API_SERVER: "${{ secrets.API_SERVER }}"
+  RS_PUB_KEY: "${{ secrets.RS_PUB_KEY }}"
+  DEFAULT_PASSWORD: "${{ secrets.DEFAULT_PASSWORD }}"
 
 jobs:
   generate-bridge:
@@ -1007,6 +1014,15 @@ jobs:
           name: librustdesk.so.${{ matrix.job.target }}
           path: ./target/${{ matrix.job.target }}/release/liblibrustdesk.so
 
+      # 使用自定义 APP_NAME 替换 Android strings.xml 中的默认应用名称
+      - name: Replace app name
+        if: env.APP_NAME != ''
+        shell: bash
+        run: |
+          echo "Using custom APP_NAME: ${{ env.APP_NAME }}"
+          sed -i "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">${{ env.APP_NAME }}<\/string>/g" ./flutter/android/app/src/main/res/values/strings.xml
+          echo "App name set to: ${{ env.APP_NAME }}"
+
       - name: Build rustdesk
         shell: bash
         env:
@@ -1215,6 +1231,15 @@ jobs:
         with:
           name: librustdesk.so.i686-linux-android
           path: ./flutter/android/app/src/main/jniLibs/x86
+
+      # 使用自定义 APP_NAME 替换 Android strings.xml 中的默认应用名称
+      - name: Replace app name
+        if: env.APP_NAME != ''
+        shell: bash
+        run: |
+          echo "Using custom APP_NAME: ${{ env.APP_NAME }}"
+          sed -i "s/<string name=\"app_name\">.*<\/string>/<string name=\"app_name\">${{ env.APP_NAME }}<\/string>/g" ./flutter/android/app/src/main/res/values/strings.xml
+          echo "App name set to: ${{ env.APP_NAME }}"
 
       - name: Build rustdesk
         shell: bash
