@@ -384,6 +384,8 @@ pub enum Data {
     FileTransferLog((String, String)),
     #[cfg(windows)]
     ControlledSessionCount(usize),
+    #[cfg(windows)]
+    HideTray(bool),
     CmErr(String),
     // CM-side file reading responses (Windows only)
     // These are sent from CM back to Connection when CM handles file reading
