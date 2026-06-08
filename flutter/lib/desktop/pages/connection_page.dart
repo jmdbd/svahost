@@ -411,7 +411,7 @@ class _ConnectionPageState extends State<ConnectionPage>
                   ) {
                     updateTextAndPreserveSelection(
                         fieldTextEditingController, _idController.text);
-                    return Obx(() => TextField(
+                        return Obx(() => TextField(
                           autocorrect: false,
                           enableSuggestions: false,
                           keyboardType: TextInputType.visiblePassword,
@@ -424,6 +424,7 @@ class _ConnectionPageState extends State<ConnectionPage>
                           maxLines: 1,
                           cursorColor:
                               Theme.of(context).textTheme.titleLarge?.color,
+                          scrollPadding: EdgeInsets.zero,
                           decoration: InputDecoration(
                               filled: false,
                               counterText: '',

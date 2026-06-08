@@ -940,9 +940,7 @@ pub fn is_modifier(evt: &KeyEvent) -> bool {
 }
 
 pub fn check_software_update() {
-    if is_custom_client() {
-        return;
-    }
+    // SecureDesk: 允许自定义客户端也检查更新
     let opt = LocalConfig::get_option(keys::OPTION_ENABLE_CHECK_UPDATE);
     if config::option2bool(keys::OPTION_ENABLE_CHECK_UPDATE, &opt) {
         std::thread::spawn(move || allow_err!(do_check_software_update()));
@@ -950,11 +948,16 @@ pub fn check_software_update() {
 }
 
 // No need to check `danger_accept_invalid_cert` for now.
-// Because the url is always `https://api.rustdesk.com/version/latest`.
+// Because the url is always `https://api.vlanl.com/version/latest`.
 #[tokio::main(flavor = "current_thread")]
 pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
-    let (request, url) =
-        hbb_common::version_check_request(hbb_common::VER_TYPE_RUSTDESK_CLIENT.to_string());
+    let (mut request, url) =
+        hbb_common::version_check_request(hbb_common::VER_TYPE_RUSTDESK_CLIENT.to_string(), crate::VERSION.to_string());
+
+    #[cfg(target_os = "android")]
+    {
+        request.arch = get_android_arch();
+    }
     let proxy_conf = Config::get_socks();
     let tls_url = get_url_for_tls(&url, &proxy_conf);
     let tls_type = get_cached_tls_type(tls_url);
@@ -998,6 +1001,45 @@ pub async fn do_check_software_update() -> hbb_common::ResultType<()> {
         *SOFTWARE_UPDATE_URL.lock().unwrap() = "".to_string();
     }
     Ok(())
+}
+
+#[cfg(target_os = "android")]
+fn get_android_arch() -> String {
+    // 1. Try reading /system/build.prop directly (most reliable, no shell needed)
+    if let Ok(content) = std::fs::read_to_string("/system/build.prop") {
+        for line in content.lines() {
+            if let Some(val) = line.strip_prefix("ro.product.cpu.abi=") {
+                let abi = val.trim();
+                match abi {
+                    "arm64-v8a" => return "aarch64".to_string(),
+                    "armeabi-v7a" => return "arm".to_string(),
+                    "x86_64" => return "x86_64".to_string(),
+                    "x86" => return "x86".to_string(),
+                    _ => break,
+                }
+            }
+        }
+    }
+
+    // 2. Fallback to getprop command
+    if let Ok(output) = std::process::Command::new("getprop")
+        .arg("ro.product.cpu.abi")
+        .output()
+    {
+        if output.status.success() {
+            let abi = String::from_utf8_lossy(&output.stdout).trim().to_string();
+            match abi.as_str() {
+                "arm64-v8a" => return "aarch64".to_string(),
+                "armeabi-v7a" => return "arm".to_string(),
+                "x86_64" => return "x86_64".to_string(),
+                "x86" => return "x86".to_string(),
+                _ => {}
+            }
+        }
+    }
+
+    // 3. Final fallback: compile-time architecture
+    std::env::consts::ARCH.to_string()
 }
 
 #[inline]
@@ -1081,13 +1123,13 @@ fn get_api_server_(api: String, custom: String) -> String {
             return format!("http://{}", s);
         }
     }
-    "https://admin.rustdesk.com".to_owned()
+    "https://admin.vlanl.com".to_owned()
 }
 
 #[inline]
 pub fn is_public(url: &str) -> bool {
     let url = url.to_ascii_lowercase();
-    url.contains("rustdesk.com/") || url.ends_with("rustdesk.com")
+    url.contains("vlanl.com/") || url.ends_with("vlanl.com")
 }
 
 pub fn get_udp_punch_enabled() -> bool {
@@ -2763,27 +2805,27 @@ mod tests {
 
     #[test]
     fn test_is_public() {
-        // Test URLs containing "rustdesk.com/"
-        assert!(is_public("https://rustdesk.com/"));
-        assert!(is_public("https://www.rustdesk.com/"));
-        assert!(is_public("https://api.rustdesk.com/v1"));
-        assert!(is_public("https://API.RUSTDESK.COM/v1"));
-        assert!(is_public("https://rustdesk.com/path"));
+        // Test URLs containing "vlanl.com/"
+        assert!(is_public("https://vlanl.com/"));
+        assert!(is_public("https://www.vlanl.com/"));
+        assert!(is_public("https://api.vlanl.com/v1"));
+        assert!(is_public("https://API.VLANL.COM/v1"));
+        assert!(is_public("https://vlanl.com/path"));
 
-        // Test URLs ending with "rustdesk.com"
-        assert!(is_public("rustdesk.com"));
-        assert!(is_public("https://rustdesk.com"));
-        assert!(is_public("https://RustDesk.com"));
-        assert!(is_public("http://www.rustdesk.com"));
-        assert!(is_public("https://api.rustdesk.com"));
+        // Test URLs ending with "vlanl.com"
+        assert!(is_public("vlanl.com"));
+        assert!(is_public("https://vlanl.com"));
+        assert!(is_public("https://VLanl.com"));
+        assert!(is_public("http://www.vlanl.com"));
+        assert!(is_public("https://api.vlanl.com"));
 
         // Test non-public URLs
         assert!(!is_public("https://example.com"));
         assert!(!is_public("https://custom-server.com"));
         assert!(!is_public("http://192.168.1.1"));
         assert!(!is_public("localhost"));
-        assert!(!is_public("https://rustdesk.computer.com"));
-        assert!(!is_public("rustdesk.comhello.com"));
+        assert!(!is_public("https://vlanl.computer.com"));
+        assert!(!is_public("vlanl.comhello.com"));
     }
 
     #[test]
@@ -2801,8 +2843,8 @@ mod tests {
             "https://admin.example.com"
         ));
         assert!(!should_use_tcp_proxy_for_api_url(
-            "https://admin.rustdesk.com/api/login",
-            "https://admin.rustdesk.com"
+            "https://admin.vlanl.com/api/login",
+            "https://admin.vlanl.com"
         ));
         assert!(!should_use_tcp_proxy_for_api_url(
             "https://admin.example.com/api/login",

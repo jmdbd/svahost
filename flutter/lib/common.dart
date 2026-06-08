@@ -3697,12 +3697,12 @@ Widget loadPowered(BuildContext context) {
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse('https://rustdesk.com'));
+        launchUrl(Uri.parse(''));
       },
       child: Opacity(
           opacity: 0.5,
           child: Text(
-            translate("powered_by_me"),
+            translate(""),
             overflow: TextOverflow.clip,
             style: Theme.of(context)
                 .textTheme
@@ -3714,24 +3714,30 @@ Widget loadPowered(BuildContext context) {
 }
 
 // max 300 x 60
+// Cache the future to avoid flashing during rebuilds.
+Future<ByteData>? _logoFuture;
+
 Widget loadLogo() {
+  _logoFuture ??= rootBundle.load('assets/logo.png');
   return FutureBuilder<ByteData>(
-      future: rootBundle.load('assets/logo.png'),
+      future: _logoFuture,
       builder: (BuildContext context, AsyncSnapshot<ByteData> snapshot) {
         if (snapshot.hasData) {
           final image = Image.asset(
             'assets/logo.png',
             fit: BoxFit.contain,
             errorBuilder: (ctx, error, stackTrace) {
-              return Container();
+              return SizedBox.shrink();
             },
           );
           return Container(
-            constraints: BoxConstraints(maxWidth: 300, maxHeight: 60),
+            constraints: BoxConstraints(maxWidth: 300, maxHeight: 36),
             child: image,
-          ).marginOnly(left: 12, right: 12, top: 12);
+          ).marginOnly(left: 12, right: 12, top: 6);
         }
-        return const Offstage();
+        // Return SizedBox.shrink() to avoid occupying space
+        // when the logo is not loaded (prevents top blank area).
+        return SizedBox.shrink();
       });
 }
 
@@ -3793,18 +3799,25 @@ Widget _buildPresetPasswordWarning() {
 
 Widget buildPresetPasswordWarningMobile() {
   if (bind.isPresetPasswordMobileOnly()) {
-    return _buildPresetPasswordWarning();
+    return buildPresetPasswordWarning();
   } else {
     return SizedBox.shrink();
   }
 }
 
+// Cache the future to avoid recreating it on every rebuild,
+// which would cause the FutureBuilder to flash a loading spinner.
+Future<bool>? _presetPasswordFuture;
+
 Widget buildPresetPasswordWarning() {
+  _presetPasswordFuture ??= bind.isPresetPassword();
   return FutureBuilder<bool>(
-    future: bind.isPresetPassword(),
+    future: _presetPasswordFuture,
     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator(); // Show a loading spinner while waiting for the Future to complete
+        // Use SizedBox.shrink() instead of CircularProgressIndicator()
+        // to avoid height changes that cause left panel flickering.
+        return SizedBox.shrink();
       } else if (snapshot.hasError) {
         return Text(
             'Error: ${snapshot.error}'); // Show an error message if the Future completed with an error
@@ -3975,18 +3988,17 @@ void earlyAssert() {
 
 void checkUpdate() {
   if (!isWeb) {
-    if (!bind.isCustomClient()) {
-      platformFFI.registerEventHandler(
-          kCheckSoftwareUpdateFinish, kCheckSoftwareUpdateFinish,
-          (Map<String, dynamic> evt) async {
-        if (evt['url'] is String) {
-          stateGlobal.updateUrl.value = evt['url'];
-        }
-      });
-      Timer(const Duration(seconds: 1), () async {
-        bind.mainGetSoftwareUpdateUrl();
-      });
-    }
+    // SecureDesk: 允许自定义客户端也检查更新
+    platformFFI.registerEventHandler(
+        kCheckSoftwareUpdateFinish, kCheckSoftwareUpdateFinish,
+        (Map<String, dynamic> evt) async {
+      if (evt['url'] is String) {
+        stateGlobal.updateUrl.value = evt['url'];
+      }
+    });
+    Timer(const Duration(seconds: 1), () async {
+      bind.mainGetSoftwareUpdateUrl();
+    });
   }
 }
 

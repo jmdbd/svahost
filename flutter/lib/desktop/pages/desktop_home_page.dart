@@ -25,6 +25,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:window_manager/window_manager.dart';
 import 'package:window_size/window_size.dart' as window_size;
 import '../widgets/button.dart';
+import '../widgets/secure_desk_right_panel.dart';
 
 class DesktopHomePage extends StatefulWidget {
   const DesktopHomePage({Key? key}) : super(key: key);
@@ -34,6 +35,11 @@ class DesktopHomePage extends StatefulWidget {
 }
 
 const borderColor = Color(0xFF2F65BA);
+
+// SecureDesk green theme colors
+const Color _sdGreenPrimary = Color(0xFF2E7D32);
+const Color _sdGreenLight = Color(0xFF43A047);
+const Color _sdGreenBorder = Color(0xFF66BB6A);
 
 class _DesktopHomePageState extends State<DesktopHomePage>
     with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
@@ -132,7 +138,17 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       value: gFFI.serverModel,
       child: Container(
         width: isIncomingOnly ? 280.0 : 200.0,
-        color: Theme.of(context).colorScheme.background,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            stops: const [0.0, 0.35],
+            colors: [
+              const Color(0xFFF1F8F2),
+              Theme.of(context).colorScheme.background,
+            ],
+          ),
+        ),
         child: Stack(
           children: [
             Column(
@@ -182,8 +198,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   buildRightPane(BuildContext context) {
     return Container(
-      color: Theme.of(context).scaffoldBackgroundColor,
-      child: ConnectionPage(),
+      color: Colors.white,
+      child: const SecureDeskRightPanel(),
     );
   }
 
