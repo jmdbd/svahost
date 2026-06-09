@@ -27,9 +27,7 @@ SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk
 | 应用名称 | SecureDesk（全平台） |
 | 服务器地址 | `rs-ny.vlanl.com` |
 | Windows 安装路径 | `Program Files\SecureDesk\securedesk.exe` |
-| 版权信息 | Copyright © 2025 vlanl. All rights reserved. |
 | 语言文件 | 51 个语言文件全部 rebrand（RustDesk → SecureDesk） |
-| 域名 | 全局替换 `rustdesk.com` → `vlanl.com`（87 个文件，223 处） |
 | Android 包名 | `com.carriez.flutter_hbb` → `com.vlanl.securedesk` |
 | 深度链接 | `rustdesk://` 协议保留不改（保证现有链接兼容） |
 
@@ -48,7 +46,7 @@ SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk
 
 | 功能 | 说明 |
 |------|------|
-| 版本检查端点 | `https://securedesk.vlanl.com/up/securedesk/version/latest.php` |
+| 版本检查端点 | `https://XXXX.XXXX.com/up/XXXX/version/latest.php` |
 | 动态文件名 | 下载文件前缀动态匹配 APP_NAME，支持 Android `.apk` |
 | 更新提示 | Flutter 端移除 `isCustomClient()` 守卫，自定义客户端正常显示更新 |
 
@@ -121,7 +119,7 @@ hide-tray = "Y"                  # 隐藏托盘图标
 unlock-pin = ""                  # PIN 锁（编译期可注入）
 custom-rendezvous-server = "rs-ny.vlanl.com"
 relay-server = "rs-ny.vlanl.com"
-api-server = "https://securedesk.vlanl.com"
+api-server = "https://xxxx.xxxx.com"
 key = ""                         # 公钥（编译期可注入）
 ```
 
@@ -140,7 +138,7 @@ OVERWRITE_SETTINGS > CONFIG2.options > DEFAULT_SETTINGS
 | `APP_NAME` | 应用名称 | `SecureDesk` |
 | `RENDEZVOUS_SERVER` | ID/中继服务器 | `rs-ny.vlanl.com` |
 | `RELAY_SERVER` | 中继服务器 | `rs-ny.vlanl.com` |
-| `API_SERVER` | API 服务器 | `https://securedesk.vlanl.com` |
+| `API_SERVER` | API 服务器 | `https://xxxx.xxxx.com` |
 | `RS_PUB_KEY` | 公钥 | base64 编码 |
 | `DEFAULT_PASSWORD` | 默认连接密码 | 手动设置 |
 
@@ -199,5 +197,3 @@ git push origin refs/heads/main:refs/heads/main
 ## 许可
 
 SecureDesk 基于 [RustDesk](https://github.com/rustdesk/rustdesk) 开发，遵循 AGPL-3.0 许可证。
-
-Copyright © 2025 vlanl. All rights reserved.
