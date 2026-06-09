@@ -34,8 +34,9 @@ class _SecureDeskRightPanelState extends State<SecureDeskRightPanel>
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: Colors.white,
+      color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
       child: Column(
         children: [
           _buildBanner(context),
@@ -211,10 +212,11 @@ class _SecureDeskRightPanelState extends State<SecureDeskRightPanel>
   }
 
   Widget _buildPeerContent(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       margin: const EdgeInsets.fromLTRB(12, 0, 12, 6),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: isDark ? const Color(0xFF2A2A2A) : Colors.white,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
