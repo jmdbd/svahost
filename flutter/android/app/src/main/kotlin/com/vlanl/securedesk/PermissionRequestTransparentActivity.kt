@@ -1,4 +1,4 @@
-package com.carriez.flutter_hbb
+package com.vlanl.securedesk
 
 import android.app.Activity
 import android.content.Intent
