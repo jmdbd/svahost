@@ -90,6 +90,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   Widget buildLeftPane(BuildContext context) {
     final isIncomingOnly = bind.isIncomingOnly();
     final isOutgoingOnly = bind.isOutgoingOnly();
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final dividerColor = isDark ? const Color(0xFF3A3A3A) : const Color(0xFFE0E0E0);
     final children = <Widget>[
       if (!isOutgoingOnly) buildPresetPasswordWarning(),
       if (bind.isCustomClient())
@@ -105,7 +107,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         buildDesktopHeader(context),
         buildIDCard(context, gFFI.serverModel),
         buildPasswordCard(context, gFFI.serverModel),
-        const Divider(height: 1, indent: 16, endIndent: 16, color: Color(0xFFE0E0E0)),
+        Divider(height: 1, indent: 16, endIndent: 16, color: dividerColor),
         const SizedBox(height: 8),
         buildRemoteControlSection(context),
         buildButtonGrid(context),
@@ -131,7 +133,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       value: gFFI.serverModel,
       child: Container(
         width: isIncomingOnly ? 280.0 : 260.0,
-        color: Colors.white,
+        color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         child: Column(
           children: [
             Expanded(
@@ -197,8 +199,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   buildRightPane(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      color: Colors.white,
+      color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
       child: const SecureDeskRightPanel(),
     );
   }
@@ -590,7 +593,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
               border: Border.all(
                 color: _remoteIdFocused.value
                     ? MyTheme.accent
-                    : const Color(0xFFDDDDDD),
+                    : (isDark ? const Color(0xFF3A3A3A) : const Color(0xFFDDDDDD)),
               ),
             ),
             clipBehavior: Clip.antiAlias,
@@ -704,7 +707,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           borderRadius: BorderRadius.circular(8),
           border: isPrimary
               ? null
-              : Border.all(color: const Color(0xFFDDDDDD)),
+              : Border.all(color: isDark ? const Color(0xFF3A3A3A) : const Color(0xFFDDDDDD)),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
