@@ -44,6 +44,9 @@ const Color _sdGreenBorder = Color(0xFF66BB6A);
 class _DesktopHomePageState extends State<DesktopHomePage>
     with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
   final _leftPaneScrollController = ScrollController();
+  final _remoteIdController = TextEditingController();
+  final _remoteIdFocusNode = FocusNode();
+  final RxBool _remoteIdFocused = false.obs;
 
   @override
   bool get wantKeepAlive => true;
@@ -96,9 +99,17 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         alignment: Alignment.center,
         child: loadLogo(),
       ),
+      if (!isOutgoingOnly) ...[
+        buildDesktopHeader(context),
+        buildIDCard(context, gFFI.serverModel),
+        buildPasswordCard(context, gFFI.serverModel),
+        const Divider(height: 1, indent: 16, endIndent: 16, color: Color(0xFFE0E0E0)),
+        const SizedBox(height: 8),
+        buildRemoteControlSection(context),
+        buildButtonGrid(context),
+        const SizedBox(height: 12),
+      ],
       buildTip(context),
-      if (!isOutgoingOnly) buildIDBoard(context),
-      if (!isOutgoingOnly) buildPasswordBoard(context),
       FutureBuilder<Widget>(
         future: Future.value(
             Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
@@ -402,6 +413,348 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         ],
       ),
     );
+  }
+
+  // --- Left pane: "你的桌面" header ---
+  Widget buildDesktopHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            translate("Your Desktop"),
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: Theme.of(context).textTheme.titleLarge?.color,
+            ),
+          ),
+          const SizedBox(height: 0),
+          Text(
+            translate("desk_tip"),
+            style: TextStyle(
+              fontSize: 10,
+              color: Theme.of(context).textTheme.titleLarge?.color?.withOpacity(0.55),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- Left pane: ID Card ---
+  Widget buildIDCard(BuildContext context, ServerModel model) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 4, 16, 2),
+      height: 50,
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A2A4A) : const Color(0xFFDBEAFE),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  translate("ID"),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: isDark ? Colors.white54 : Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                ListenableBuilder(
+                  listenable: model.serverId,
+                  builder: (context, _) => Text(
+                    model.serverId.text.isEmpty ? "-" : model.serverId.text,
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                      color: isDark ? MyTheme.accent : const Color(0xFF1565C0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            width: 20,
+            height: 20,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(4),
+              onTap: () {
+                Clipboard.setData(
+                    ClipboardData(text: model.serverId.text));
+                showToast(translate("Copied"));
+              },
+              child: Icon(Icons.copy, size: 12,
+                  color: isDark ? Colors.white38 : Colors.black38),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // --- Left pane: Password Card ---
+  Widget buildPasswordCard(BuildContext context, ServerModel model) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final showOneTime = model.approveMode != 'click' &&
+        model.verificationMethod != kUsePermanentPassword;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(16, 2, 16, 4),
+      height: 50,
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF1A2A4A) : const Color(0xFFDBEAFE),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  translate("One-time Password"),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: isDark ? Colors.white54 : Colors.black54,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                ListenableBuilder(
+                  listenable: model.serverPasswd,
+                  builder: (context, _) => Text(
+                    model.serverPasswd.text.isEmpty ? "-" : model.serverPasswd.text,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: isDark ? Colors.white : Colors.black87,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (showOneTime)
+            AnimatedRotationWidget(
+              onPressed: () => bind.mainUpdateTemporaryPassword(),
+              child: Tooltip(
+                message: translate('Refresh Password'),
+                child: Icon(Icons.refresh, size: 12,
+                    color: isDark ? Colors.white38 : Colors.black38),
+              ),
+            ).marginOnly(right: 2),
+          if (!bind.isDisableSettings())
+            InkWell(
+              borderRadius: BorderRadius.circular(4),
+              onTap: () => DesktopSettingPage.switch2page(SettingsTabKey.safety),
+              child: Tooltip(
+                message: translate('Change Password'),
+                child: Icon(Icons.edit, size: 12,
+                    color: isDark ? Colors.white38 : Colors.black38),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  // --- Left pane: "控制远程桌面" section ---
+  Widget buildRemoteControlSection(BuildContext context) {
+    final textColor = Theme.of(context).textTheme.titleLarge?.color;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 4, 16, 2),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            translate('Control Remote Desktop'),
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 4),
+          // Remote ID input field
+          Obx(() => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? const Color(0xFF2A2A2A)
+                  : Colors.white,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: _remoteIdFocused.value
+                    ? MyTheme.accent
+                    : const Color(0xFFDDDDDD),
+              ),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _remoteIdController,
+                    focusNode: _remoteIdFocusNode,
+                    style: const TextStyle(fontSize: 13),
+                    // Prevent auto-scroll when focus returns after closing sub-windows,
+                    // which causes the left panel content to flicker up and down.
+                    scrollPadding: EdgeInsets.zero,
+                    decoration: InputDecoration(
+                      hintText: translate('Enter Remote ID'),
+                      hintStyle: TextStyle(
+                        color: textColor?.withOpacity(0.35),
+                        fontSize: 12,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    ),
+                    onSubmitted: (_) => _onConnect(),
+                  ),
+                ),
+                const SizedBox.shrink(),
+              ],
+            ),
+          )),
+        ],
+      ),
+    );
+  }
+
+  // --- Left pane: 2x2 Button Grid ---
+  Widget buildButtonGrid(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 2, 16, 4),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  icon: Icons.folder_open_outlined,
+                  label: translate('Transfer file'),
+                  isPrimary: false,
+                  onTap: () => _onConnect(isFileTransfer: true),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  icon: Icons.videocam_outlined,
+                  label: translate('View camera'),
+                  isPrimary: false,
+                  onTap: () => _onConnect(isViewCamera: true),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  icon: Icons.link,
+                  label: translate('Connect'),
+                  isPrimary: true,
+                  onTap: () => _onConnect(),
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: _buildActionButton(
+                  context,
+                  icon: Icons.terminal,
+                  label: '${translate('Terminal')} (Beta)',
+                  isPrimary: true,
+                  onTap: () => _onConnect(isTerminal: true),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildActionButton(
+    BuildContext context, {
+    required IconData icon,
+    required String label,
+    required bool isPrimary,
+    required VoidCallback onTap,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        decoration: BoxDecoration(
+          color: isPrimary
+              ? MyTheme.accent
+              : (isDark ? const Color(0xFF2A2A2A) : Colors.white),
+          borderRadius: BorderRadius.circular(8),
+          border: isPrimary
+              ? null
+              : Border.all(color: const Color(0xFFDDDDDD)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              icon,
+              size: 16,
+              color: isPrimary ? Colors.white : MyTheme.accent,
+            ),
+            const SizedBox(width: 6),
+            Flexible(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                  color: isPrimary ? Colors.white : MyTheme.accent,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // --- Connection logic ---
+  void _onConnect({
+    bool isFileTransfer = false,
+    bool isViewCamera = false,
+    bool isTerminal = false,
+  }) {
+    final id = _remoteIdController.text.trim();
+    if (id.isEmpty) return;
+    connect(context, id,
+        isFileTransfer: isFileTransfer,
+        isViewCamera: isViewCamera,
+        isTerminal: isTerminal);
   }
 
   buildTip(BuildContext context) {
@@ -874,6 +1227,19 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       });
     }
     WidgetsBinding.instance.addObserver(this);
+
+    // Listen for remote ID focus changes
+    _remoteIdFocusNode.addListener(() {
+      _remoteIdFocused.value = _remoteIdFocusNode.hasFocus;
+    });
+
+    // Load last remote ID
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final lastRemoteId = await bind.mainGetLastRemoteId();
+      if (lastRemoteId.isNotEmpty && _remoteIdController.text.isEmpty) {
+        _remoteIdController.text = lastRemoteId;
+      }
+    });
   }
 
   _updateWindowSize() {
@@ -895,6 +1261,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     _uniLinksSubscription?.cancel();
     Get.delete<RxBool>(tag: 'stop-service');
     _updateTimer?.cancel();
+    _remoteIdController.dispose();
+    _remoteIdFocusNode.dispose();
     WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
