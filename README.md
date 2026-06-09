@@ -1,182 +1,203 @@
-<p align="center">
-  <img src="res/logo-header.svg" alt="RustDesk - Your remote desktop"><br>
-  <a href="#raw-steps-to-build">Build</a> •
-  <a href="#how-to-build-with-docker">Docker</a> •
-  <a href="#file-structure">Structure</a> •
-  <a href="#snapshot">Snapshot</a><br>
-  [<a href="docs/README-UA.md">Українська</a>] | [<a href="docs/README-CS.md">česky</a>] | [<a href="docs/README-ZH.md">中文</a>] | [<a href="docs/README-HU.md">Magyar</a>] | [<a href="docs/README-ES.md">Español</a>] | [<a href="docs/README-FA.md">فارسی</a>] | [<a href="docs/README-FR.md">Français</a>] | [<a href="docs/README-DE.md">Deutsch</a>] | [<a href="docs/README-PL.md">Polski</a>] | [<a href="docs/README-ID.md">Indonesian</a>] | [<a href="docs/README-FI.md">Suomi</a>] | [<a href="docs/README-ML.md">മലയാളം</a>] | [<a href="docs/README-JP.md">日本語</a>] | [<a href="docs/README-NL.md">Nederlands</a>] | [<a href="docs/README-IT.md">Italiano</a>] | [<a href="docs/README-RU.md">Русский</a>] | [<a href="docs/README-PTBR.md">Português (Brasil)</a>] | [<a href="docs/README-EO.md">Esperanto</a>] | [<a href="docs/README-KR.md">한국어</a>] | [<a href="docs/README-AR.md">العربي</a>] | [<a href="docs/README-VN.md">Tiếng Việt</a>] | [<a href="docs/README-DA.md">Dansk</a>] | [<a href="docs/README-GR.md">Ελληνικά</a>] | [<a href="docs/README-TR.md">Türkçe</a>] | [<a href="docs/README-NO.md">Norsk</a>] | [<a href="docs/README-RO.md">Română</a>]<br>
-  <b>We need your help to translate this README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">RustDesk UI</a> and <a href="https://github.com/rustdesk/doc.rustdesk.com">RustDesk Doc</a> to your native language</b>
-</p>
+# SecureDesk
 
-> [!Caution]
-> **Misuse Disclaimer:** <br>
-> The developers of RustDesk do not condone or support any unethical or illegal use of this software. Misuse, such as unauthorized access, control or invasion of privacy, is strictly against our guidelines. The authors are not responsible for any misuse of the application.
+> 基于 RustDesk 1.4.7 的企业级远程桌面解决方案
 
+SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk) 1.4.7 的企业定制版本，由 vlanl 团队维护。开箱即用，无需配置，数据自主可控。
 
-Chat with us: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
+---
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Advanced%20Features-blue)](https://rustdesk.com/pricing.html)
+## 与 RustDesk 的差异
 
-Yet another remote desktop solution, written in Rust. Works out of the box with no configuration required. You have full control of your data, with no concerns about security. You can use our rendezvous/relay server, [set up your own](https://rustdesk.com/server), or [write your own rendezvous/relay server](https://github.com/rustdesk/rustdesk-server-demo).
+### 企业定制功能
 
-![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
+| 功能 | 说明 | 实现位置 |
+|------|------|----------|
+| Repository Secrets 注入 | 通过 GitHub Actions secrets 编译期注入服务器地址、公钥、默认密码等 | `libs/hbb_common/build.rs` + `config.rs` |
+| 隐藏 CM 管理窗口 | 支持 `allow-hide-cm` 选项隐藏远程连接确认窗口 | `src/ui/cm.tis` |
+| 隐藏托盘图标 | 支持 `hide-tray` 选项完全隐藏系统托盘图标 | `src/tray.rs` |
+| PIN 设置锁 | 主窗口支持 PIN 码锁定，防止未授权操作 | `src/ui/index.tis` + `src/ipc.rs` |
+| 解锁画质 & FPS | 画质范围 10–4095，FPS 范围 5–120（原限制 10–100 / 5–30） | `src/client.rs` |
+| APP_NAME 动态化 | 全平台使用动态 APP_NAME，避免硬编码 "RustDesk" | `src/platform/windows.rs` + `src/plugin/mod.rs` |
+| 默认配置优化 | 自动更新、直连、静音 默认勾选 | `config.rs` |
 
-RustDesk welcomes contribution from everyone. See [CONTRIBUTING.md](docs/CONTRIBUTING.md) for help getting started.
+### 品牌定制
 
-[**FAQ**](https://github.com/rustdesk/rustdesk/wiki/FAQ)
+| 项目 | 修改范围 |
+|------|----------|
+| 应用名称 | SecureDesk（全平台） |
+| 服务器地址 | `rs-ny.vlanl.com` |
+| Windows 安装路径 | `Program Files\SecureDesk\securedesk.exe` |
+| 版权信息 | Copyright © 2025 vlanl. All rights reserved. |
+| 语言文件 | 51 个语言文件全部 rebrand（RustDesk → SecureDesk） |
+| 域名 | 全局替换 `rustdesk.com` → `vlanl.com`（87 个文件，223 处） |
+| Android 包名 | `com.carriez.flutter_hbb` → `com.vlanl.securedesk` |
+| 深度链接 | `rustdesk://` 协议保留不改（保证现有链接兼容） |
 
-[**BINARY DOWNLOAD**](https://github.com/rustdesk/rustdesk/releases)
+### Flutter UI 增强
 
-[**NIGHTLY BUILD**](https://github.com/rustdesk/rustdesk/releases/tag/nightly)
+| 功能 | 说明 |
+|------|------|
+| 左侧连接面板 | ID 卡片（浅蓝背景）+ 密码卡片 + 远程 ID 输入框 + 2×2 按钮网格（传输文件/摄像头/终端/连接） |
+| 绿色主题 | 按钮渐变 `#43A047→#2E7D32`，悬停边框绿色，远程 ID 聚焦绿色 |
+| SecureDesk 右侧面板 | 专属 Banner（绿色渐变 + 自然装饰动画）+ 设备列表 + 端到端加密安全提示 |
+| 状态栏 | 左下角固定就绪状态指示（绿点 + 服务连接状态 + 每秒轮询） |
+| 布局优化 | helpCards/pluginEntry/状态栏固定底部，不受滚动裁剪 |
+| 暗黑模式 | 全界面（左栏/右栏/面板/分割线/输入框/按钮边框）适配暗黑主题 |
 
-[<img src="https://f-droid.org/badge/get-it-on.png"
-    alt="Get it on F-Droid"
-    height="80">](https://f-droid.org/en/packages/com.carriez.flutter_hbb)
-[<img src="https://flathub.org/api/badge?svg&locale=en"
-    alt="Get it on Flathub"
-    height="80">](https://flathub.org/apps/com.rustdesk.RustDesk)
+### 版本检查 & 自动更新
 
-## Dependencies
+| 功能 | 说明 |
+|------|------|
+| 版本检查端点 | `https://securedesk.vlanl.com/up/securedesk/version/latest.php` |
+| 动态文件名 | 下载文件前缀动态匹配 APP_NAME，支持 Android `.apk` |
+| 更新提示 | Flutter 端移除 `isCustomClient()` 守卫，自定义客户端正常显示更新 |
 
-Desktop versions use Flutter or Sciter (deprecated) for GUI, this tutorial is for Sciter only, since it is easier and more friendly to start. Check out our [CI](https://github.com/rustdesk/rustdesk/blob/master/.github/workflows/flutter-build.yml) for building Flutter version.
+### CI/CD
 
-Please download Sciter dynamic library yourself.
+| 特性 | 说明 |
+|------|------|
+| 全平台构建 | Windows (x64/i686) + Linux (x64/aarch64/armv7) + macOS (x64/aarch64) + Android + iOS |
+| Secrets 注入 | 6 个 env 变量通过 `option_env!` 编译期注入 |
+| 产物命名 | 全部 `securedesk-*` 格式 |
+| 手动触发 | 支持 `workflow_dispatch` 手动触发构建 |
 
-[Windows](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.win/x64/sciter.dll) |
-[Linux](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so) |
-[macOS](https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.osx/libsciter.dylib)
+---
 
-## Raw Steps to build
+## 编译
 
-- Prepare your Rust development env and C++ build env
+### 环境要求
 
-- Install [vcpkg](https://github.com/microsoft/vcpkg), and set `VCPKG_ROOT` env variable correctly
+```bash
+# Ubuntu/Debian
+sudo apt-get install -y pkg-config libssl-dev libxdo-dev libx11-dev libxext-dev \
+  libxcb-shape0-dev libxcb-render0-dev libxcb-randr0-dev libxcb-image0-dev \
+  libxcb-keysyms1 libxcb-util-dev libsodium-dev nasm libayatana-appindicator3-dev
 
-  - Windows: vcpkg install libvpx:x64-windows-static libyuv:x64-windows-static opus:x64-windows-static aom:x64-windows-static
-  - Linux/macOS: vcpkg install libvpx libyuv opus aom
-
-- run `cargo run`
-
-## [Build](https://rustdesk.com/docs/en/dev/build/)
-
-## How to Build on Linux
-
-### Ubuntu 18 (Debian 10)
-
-```sh
-sudo apt install -y zip g++ gcc git curl wget nasm yasm libgtk-3-dev clang libxcb-randr0-dev libxdo-dev \
-        libxfixes-dev libxcb-shape0-dev libxcb-xfixes0-dev libasound2-dev libpulse-dev cmake make \
-        libclang-dev ninja-build libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpam0g-dev
+# Windows: Visual Studio Build Tools 2022 + Rust (stable-msvc)
+# macOS: brew install nasm libsodium
 ```
 
-### openSUSE Tumbleweed
+### 本地编译
 
-```sh
-sudo zypper install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libXfixes-devel cmake alsa-lib-devel gstreamer-devel gstreamer-plugins-base-devel xdotool-devel pam-devel
+```bash
+# 1. 克隆
+git clone --recurse-submodules https://github.com/vlanl/SecureDesk.git
+cd SecureDesk
+
+# 2. 编译 Rust 端
+cargo build --release
+
+# 3. 编译 Flutter 端（Windows 示例）
+cd flutter && flutter build windows --release
 ```
 
-### Fedora 28 (CentOS 8)
+> **注意**：本地编译时 `option_env!` 无法读取 CI secrets，会回退到 `config.rs` 中的 fallback 值（`rs-ny.vlanl.com` / `SecureDesk`）。
 
-```sh
-sudo yum -y install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel cmake alsa-lib-devel gstreamer1-devel gstreamer1-plugins-base-devel pam-devel
+### 子模块
+
+```
+vlanl/SecureDesk (master)
+├── libs/hbb_common → vlanl/hbb_common (main)
+│   └── 包含 build.rs secrets 注入 + config.rs 默认配置 + config.rs 中文注释
+├── flutter/         → Flutter 前端（含 SecureDesk 专属 UI）
+├── src/             → Rust 后端（含企业定制功能）
+└── .github/         → CI 工作流
 ```
 
-### Arch (Manjaro)
+---
 
-```sh
-sudo pacman -Syu --needed unzip git cmake gcc curl wget yasm nasm zip make pkg-config clang gtk3 xdotool libxcb libxfixes alsa-lib pipewire
+## 配置文件
+
+### DEFAULT_SETTINGS 默认值
+
+```toml
+allow-auto-update = "Y"          # 允许自动更新
+direct-server = "Y"              # 允许 IP 直接访问
+disable_audio = "Y"              # 默认静音
+approve-mode = "password"        # 密码批准模式
+verification-method = "use-permanent-password"
+allow-hide-cm = "Y"              # 允许隐藏 CM 窗口
+hide-tray = "Y"                  # 隐藏托盘图标
+unlock-pin = ""                  # PIN 锁（编译期可注入）
+custom-rendezvous-server = "rs-ny.vlanl.com"
+relay-server = "rs-ny.vlanl.com"
+api-server = "https://securedesk.vlanl.com"
+key = ""                         # 公钥（编译期可注入）
 ```
 
-### Install vcpkg
+### 配置优先级
 
-```sh
-git clone https://github.com/microsoft/vcpkg
-cd vcpkg
-git checkout 2023.04.15
-cd ..
-vcpkg/bootstrap-vcpkg.sh
-export VCPKG_ROOT=$HOME/vcpkg
-vcpkg/vcpkg install libvpx libyuv opus aom
+```
+OVERWRITE_SETTINGS > CONFIG2.options > DEFAULT_SETTINGS
 ```
 
-### Fix libvpx (For Fedora)
+---
 
-```sh
-cd vcpkg/buildtrees/libvpx/src
-cd *
-./configure
-sed -i 's/CFLAGS+=-I/CFLAGS+=-fPIC -I/g' Makefile
-sed -i 's/CXXFLAGS+=-I/CXXFLAGS+=-fPIC -I/g' Makefile
-make
-cp libvpx.a $HOME/vcpkg/installed/x64-linux/lib/
-cd
+## GitHub Actions Secrets
+
+| Secret | 说明 | 示例 |
+|--------|------|------|
+| `APP_NAME` | 应用名称 | `SecureDesk` |
+| `RENDEZVOUS_SERVER` | ID/中继服务器 | `rs-ny.vlanl.com` |
+| `RELAY_SERVER` | 中继服务器 | `rs-ny.vlanl.com` |
+| `API_SERVER` | API 服务器 | `https://securedesk.vlanl.com` |
+| `RS_PUB_KEY` | 公钥 | base64 编码 |
+| `DEFAULT_PASSWORD` | 默认连接密码 | 手动设置 |
+
+---
+
+## 暗黑模式适配
+
+Flutter 界面完整支持暗黑模式，通过 `Theme.of(context).brightness == Brightness.dark` 检测：
+
+| 元素 | 暗黑 | 亮色 |
+|------|------|------|
+| 页面背景 | `0xFF1E1E1E` | `Colors.white` |
+| 卡片/面板 | `0xFF2A2A2A` | `Colors.white` |
+| 分割线 | `0xFF3A3A3A` | `0xFFE0E0E0` |
+
+---
+
+## 常见问题
+
+### 编译报错 `librustdesk.dll` not found
+
+本地编译前需先运行 `flutter_rust_bridge_codegen` 生成 bridge 代码：
+
+```bash
+flutter_rust_bridge_codegen \
+  --rust-input src/flutter_ffi.rs \
+  --dart-output flutter/lib/generated_bridge.dart \
+  --class-name SecureDesk
 ```
 
-### Build
+### Windows 浅克隆无法推送
 
-```sh
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-source $HOME/.cargo/env
-git clone --recurse-submodules https://github.com/rustdesk/rustdesk
-cd rustdesk
-mkdir -p target/debug
-wget https://raw.githubusercontent.com/c-smile/sciter-sdk/master/bin.lnx/x64/libsciter-gtk.so
-mv libsciter-gtk.so target/debug
-VCPKG_ROOT=$HOME/vcpkg cargo run
+```bash
+git fetch --unshallow
 ```
 
-## How to build with Docker
+### 子模块同时存在同名分支和标签
 
-Begin by cloning the repository and building the Docker container:
-
-```sh
-git clone https://github.com/rustdesk/rustdesk
-cd rustdesk
-git submodule update --init --recursive
-docker build -t "rustdesk-builder" .
+推送时指定完整 ref：
+```bash
+git push origin refs/heads/main:refs/heads/main
 ```
 
-Then, each time you need to build the application, run the following command:
+---
 
-```sh
-docker run --rm -it -v $PWD:/home/user/rustdesk -v rustdesk-git-cache:/home/user/.cargo/git -v rustdesk-registry-cache:/home/user/.cargo/registry -e PUID="$(id -u)" -e PGID="$(id -g)" rustdesk-builder
-```
+## 开发规范
 
-Note that the first build may take longer before dependencies are cached, subsequent builds will be faster. Additionally, if you need to specify different arguments to the build command, you may do so at the end of the command in the `<OPTIONAL-ARGS>` position. For instance, if you wanted to build an optimized release version, you would run the command above followed by `--release`. The resulting executable will be available in the target folder on your system, and can be run with:
+- **暗黑模式**：每个 Widget 方法内独立定义 `isDark`，不在类级别缓存
+- **颜色**：硬编码 `Colors.white` 需改为 `isDark ? Color(0xFF...) : Colors.white`
+- **CI**：修改 `src/` 或 `libs/` 下的非忽略文件自动触发构建
+- **子模块**：修改子模块后需在主仓库 `git add libs/hbb_common` 更新指针
+- **Rebrand**：GitHub 组织名 `rustdesk-org` 绝对不能替换（第三方 fork 依赖）
 
-```sh
-target/debug/rustdesk
-```
+---
 
-Or, if you're running a release executable:
+## 许可
 
-```sh
-target/release/rustdesk
-```
+SecureDesk 基于 [RustDesk](https://github.com/rustdesk/rustdesk) 开发，遵循 AGPL-3.0 许可证。
 
-Please ensure that you run these commands from the root of the RustDesk repository, or the application may not find the required resources. Also note that other cargo subcommands such as `install` or `run` are not currently supported via this method as they would install or run the program inside the container instead of the host.
-
-## File Structure
-
-- **[libs/hbb_common](https://github.com/rustdesk/rustdesk/tree/master/libs/hbb_common)**: video codec, config, tcp/udp wrapper, protobuf, fs functions for file transfer, and some other utility functions
-- **[libs/scrap](https://github.com/rustdesk/rustdesk/tree/master/libs/scrap)**: screen capture
-- **[libs/enigo](https://github.com/rustdesk/rustdesk/tree/master/libs/enigo)**: platform specific keyboard/mouse control
-- **[libs/clipboard](https://github.com/rustdesk/rustdesk/tree/master/libs/clipboard)**: file copy and paste implementation for Windows, Linux, macOS.
-- **[src/ui](https://github.com/rustdesk/rustdesk/tree/master/src/ui)**: obsolete Sciter UI (deprecated)
-- **[src/server](https://github.com/rustdesk/rustdesk/tree/master/src/server)**: audio/clipboard/input/video services, and network connections
-- **[src/client.rs](https://github.com/rustdesk/rustdesk/tree/master/src/client.rs)**: start a peer connection
-- **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: Communicate with [rustdesk-server](https://github.com/rustdesk/rustdesk-server), wait for remote direct (TCP hole punching) or relayed connection
-- **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: platform specific code
-- **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: Flutter code for desktop and mobile
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/v1/js)**: JavaScript for Flutter web client
-
-## Screenshots
-
-![Connection Manager](https://github.com/rustdesk/rustdesk/assets/28412477/db82d4e7-c4bc-4823-8e6f-6af7eadf7651)
-
-![Connected to a Windows PC](https://github.com/rustdesk/rustdesk/assets/28412477/9baa91e9-3362-4d06-aa1a-7518edcbd7ea)
-
-![File Transfer](https://github.com/rustdesk/rustdesk/assets/28412477/39511ad3-aa9a-4f8c-8947-1cce286a46ad)
-
-![TCP Tunneling](https://github.com/rustdesk/rustdesk/assets/28412477/78e8708f-e87e-4570-8373-1360033ea6c5)
-
+Copyright © 2025 vlanl. All rights reserved.
