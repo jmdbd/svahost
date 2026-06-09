@@ -567,6 +567,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   // --- Left pane: "控制远程桌面" section ---
   Widget buildRemoteControlSection(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final textColor = Theme.of(context).textTheme.titleLarge?.color;
 
     return Padding(
