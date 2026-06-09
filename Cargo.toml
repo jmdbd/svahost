@@ -213,7 +213,7 @@ exclude = ["vdi/host", "examples/custom_plugin"]
 libxdo-sys = { path = "libs/libxdo-sys-stub" }
 
 [package.metadata.winres]
-LegalCopyright = "Copyright © 2025 vlanl Ltd"
+LegalCopyright = "Copyright © 2025 vlanl Ltd. All rights reserved."
 ProductName = "SecureDesk"
 FileDescription = "SecureDesk Remote Desktop"
 OriginalFilename = "securedesk.exe"
