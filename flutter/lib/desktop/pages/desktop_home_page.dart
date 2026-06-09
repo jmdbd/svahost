@@ -109,26 +109,6 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         buildButtonGrid(context),
         const SizedBox(height: 12),
       ],
-      buildTip(context),
-      FutureBuilder<Widget>(
-        future: Future.value(
-            Obx(() => buildHelpCards(stateGlobal.updateUrl.value))),
-        builder: (_, data) {
-          if (data.hasData) {
-            if (isIncomingOnly) {
-              if (isInHomePage()) {
-                Future.delayed(Duration(milliseconds: 300), () {
-                  _updateWindowSize();
-                });
-              }
-            }
-            return data.data!;
-          } else {
-            return const Offstage();
-          }
-        },
-      ),
-      buildPluginEntry(),
     ];
     if (isIncomingOnly) {
       children.addAll([
@@ -148,7 +128,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     return ChangeNotifierProvider.value(
       value: gFFI.serverModel,
       child: Container(
-        width: isIncomingOnly ? 280.0 : 200.0,
+        width: isIncomingOnly ? 280.0 : 260.0,
         decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
@@ -160,24 +140,41 @@ class _DesktopHomePageState extends State<DesktopHomePage>
             ],
           ),
         ),
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                SingleChildScrollView(
-                  controller: _leftPaneScrollController,
-                  child: Column(
-                    key: _childKey,
-                    children: children,
+            Expanded(
+              child: Material(
+                color: Colors.transparent,
+                type: MaterialType.canvas,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                  child: SingleChildScrollView(
+                    controller: _leftPaneScrollController,
+                    child: Column(
+                      key: _childKey,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: children,
+                    ),
                   ),
                 ),
-                Expanded(child: Container())
-              ],
+              ),
             ),
+            // Fixed bottom area — help cards, plugin entry, status bar
+            // are outside the scrollable area so they sit flush at the bottom.
+            Obx(() {
+              if (isIncomingOnly && isInHomePage()) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  _updateWindowSize();
+                });
+              }
+              return buildHelpCards(stateGlobal.updateUrl.value);
+            }),
+            buildPluginEntry(),
+            if (!isOutgoingOnly)
+              buildStatusBar(context),
             if (isOutgoingOnly)
-              Positioned(
-                bottom: 6,
-                left: 12,
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6, left: 12),
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: InkWell(
@@ -200,7 +197,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                     onHover: (value) => _editHover.value = value,
                   ),
                 ),
-              )
+              ),
           ],
         ),
       ),
@@ -741,6 +738,73 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         ),
       ),
     );
+  }
+
+  Widget buildStatusBar(BuildContext context) {
+    final textColor = Theme.of(context).textTheme.titleLarge?.color;
+
+    return Obx(() {
+      final statusMsg = _getStatusMessage();
+      final dotColor = svcStopped.value ||
+              stateGlobal.svcStatus.value == SvcStatus.connecting
+          ? kColorWarn
+          : (stateGlobal.svcStatus.value == SvcStatus.ready
+              ? const Color(0xFF32BEA6)
+              : const Color(0xFFE04F5F));
+
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        decoration: BoxDecoration(
+          color: Theme.of(context).brightness == Brightness.dark
+              ? const Color(0xFF1E1E1E)
+              : Colors.white,
+          border: Border(
+            top: BorderSide(
+              color: textColor?.withOpacity(0.08) ?? const Color(0xFFDDDDDD),
+            ),
+          ),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: dotColor,
+              ),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                statusMsg,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: textColor?.withOpacity(0.65),
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            Icon(Icons.lock_outline, size: 14,
+                color: textColor?.withOpacity(0.4)),
+          ],
+        ),
+      );
+    });
+  }
+
+  String _getStatusMessage() {
+    if (svcStopped.value) {
+      return translate("Service is not running");
+    }
+    switch (stateGlobal.svcStatus.value) {
+      case SvcStatus.connecting:
+        return translate("connecting_status");
+      case SvcStatus.ready:
+        return translate("Ready");
+      case SvcStatus.notReady:
+        return translate("not_ready_status");
+    }
   }
 
   // --- Connection logic ---
