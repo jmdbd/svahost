@@ -58,6 +58,8 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   var watchIsInputMonitoring = false;
   var watchIsCanRecordAudio = false;
   Timer? _updateTimer;
+  Timer? _statusTimer;
+  final _localSvcStatus = SvcStatus.notReady.obs;
   bool isCardClosed = false;
 
   final RxBool _editHover = false.obs;
@@ -129,17 +131,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
       value: gFFI.serverModel,
       child: Container(
         width: isIncomingOnly ? 280.0 : 260.0,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            stops: const [0.0, 0.35],
-            colors: [
-              const Color(0xFFF1F8F2),
-              Theme.of(context).colorScheme.background,
-            ],
-          ),
-        ),
+        color: Colors.white,
         child: Column(
           children: [
             Expanded(
@@ -746,9 +738,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     return Obx(() {
       final statusMsg = _getStatusMessage();
       final dotColor = svcStopped.value ||
-              stateGlobal.svcStatus.value == SvcStatus.connecting
+              _localSvcStatus.value == SvcStatus.connecting
           ? kColorWarn
-          : (stateGlobal.svcStatus.value == SvcStatus.ready
+          : (_localSvcStatus.value == SvcStatus.ready
               ? const Color(0xFF32BEA6)
               : const Color(0xFFE04F5F));
 
@@ -797,7 +789,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     if (svcStopped.value) {
       return translate("Service is not running");
     }
-    switch (stateGlobal.svcStatus.value) {
+    switch (_localSvcStatus.value) {
       case SvcStatus.connecting:
         return translate("connecting_status");
       case SvcStatus.ready:
@@ -1179,6 +1171,23 @@ class _DesktopHomePageState extends State<DesktopHomePage>
         }
       }
     });
+    // Poll real service connection status for the bottom status bar
+    _statusTimer = periodic_immediate(const Duration(seconds: 1), () async {
+      try {
+        final status = jsonDecode(await bind.mainGetConnectStatus())
+            as Map<String, dynamic>;
+        final statusNum = status['status_num'] as int;
+        if (statusNum == 0) {
+          _localSvcStatus.value = SvcStatus.connecting;
+        } else if (statusNum == -1) {
+          _localSvcStatus.value = SvcStatus.notReady;
+        } else if (statusNum == 1) {
+          _localSvcStatus.value = SvcStatus.ready;
+        } else {
+          _localSvcStatus.value = SvcStatus.notReady;
+        }
+      } catch (_) {}
+    });
     Get.put<RxBool>(svcStopped, tag: 'stop-service');
     rustDeskWinManager.registerActiveWindowListener(onActiveWindowChanged);
 
@@ -1325,6 +1334,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     _uniLinksSubscription?.cancel();
     Get.delete<RxBool>(tag: 'stop-service');
     _updateTimer?.cancel();
+    _statusTimer?.cancel();
     _remoteIdController.dispose();
     _remoteIdFocusNode.dispose();
     WidgetsBinding.instance.removeObserver(this);
