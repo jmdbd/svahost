@@ -860,19 +860,25 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   Widget buildHelpCards(String updateUrl) {
     // SecureDesk: 允许自定义客户端显示更新卡片，移除 isCustomClient 和 uriPrefix 守卫
-    // updateUrl 是服务端根据当前架构返回的直接下载地址，如：
-    // https://github.com/vlanl/SecureDesk/releases/download/1.4.8/securedesk-1.4.8-x86_64.exe
+    // 服务端返回 tag 格式 URL (如 .../version/tag/1.4.8)，客户端负责拼接文件名
+    // download.php 根据文件名检测平台，302 跳转到数据库配置的下载地址
     if (updateUrl.isNotEmpty && !isCardClosed) {
       final isToUpdate = (isWindows || isMacOS) && bind.mainIsInstalled();
       final newVersion = bind.mainGetNewVersion();
       String btnText = isToUpdate ? 'Update' : 'Download';
       GestureTapCallback onPressed = () async {
-        // Download 模式：直接打开服务端配置的下载地址
-        final Uri url = Uri.parse(updateUrl);
-        await launchUrl(url);
+        // Download 模式：拼接 download/{version}/{filename}，通过 download.php 302 跳转下载
+        String downloadBase = updateUrl.replaceAll('tag', 'download');
+        String version =
+            downloadBase.substring(downloadBase.lastIndexOf('/') + 1);
+        String downloadFile =
+            bind.mainGetCommonSync(key: 'download-file-$version');
+        String fullUrl = downloadFile.startsWith('error:')
+            ? downloadBase // 降级：直接跳到 download/{version} 让服务端兜底
+            : '$downloadBase/$downloadFile';
+        await launchUrl(Uri.parse(fullUrl));
       };
       if (isToUpdate) {
-        // Update 模式：使用服务端返回的下载地址自动下载安装
         onPressed = () {
           handleUpdate(updateUrl);
         };
@@ -884,7 +890,9 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           onPressed,
           closeButton: true,
           help: isToUpdate ? 'Changelog' : null,
-          link: isToUpdate ? updateUrl.replaceAll(RegExp(r'/[^/]+$'), '/tag/$newVersion') : null);
+          link: isToUpdate
+              ? 'https://github.com/vlanl/SecureDesk/releases/tag/$newVersion'
+              : null);
     }
     if (systemError.isNotEmpty) {
       return buildInstallCard("", systemError, "", () {});

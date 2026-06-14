@@ -9,46 +9,21 @@ import 'package:url_launcher/url_launcher.dart';
 
 final _isExtracting = false.obs;
 
-void handleUpdate(String updateUrl) {
+void handleUpdate(String releasePageUrl) {
   _isExtracting.value = false;
-  String downloadUrl;
-
-  // 检查是否已是直接下载文件地址（如服务端按架构返回的直接下载链接）
-  final isDirectDownload = RegExp(r'\.(exe|apk|dmg|msi|pkg|zip|AppImage)$')
-      .hasMatch(updateUrl);
-  if (isDirectDownload) {
-    // 已是完整下载地址，直接使用
-    downloadUrl = updateUrl;
-  } else if (updateUrl.contains('github.com') &&
-      updateUrl.contains('releases/tag')) {
-    // GitHub releases tag 格式: /tag/{version} -> /download/{version}/
-    downloadUrl =
-        updateUrl.replaceFirst('/tag/', '/download/') + '/';
-  } else {
-    // 原始 RustDesk 服务端格式: /tag/ -> /download/
-    downloadUrl = updateUrl.replaceAll('tag', 'download');
-  }
-
-  String version;
-  if (isDirectDownload) {
-    // 从文件名中提取版本号，例如 securedesk-1.4.8-x86_64.exe -> 1.4.8
-    final lastSlash = updateUrl.lastIndexOf('/');
-    final firstDash = updateUrl.indexOf('-', lastSlash + 1);
-    version = firstDash > 0 ? updateUrl.substring(lastSlash + 1, firstDash) : '';
-  } else {
-    version = updateUrl.substring(updateUrl.lastIndexOf('/') + 1);
-  }
+  // SecureDesk: 服务端返回 tag 格式 URL (.../version/tag/1.4.8)
+  // 转换为 download/{version}，再拼接平台文件名，通过 download.php 302 跳转到真实下载地址
+  String downloadUrl = releasePageUrl.replaceAll('tag', 'download');
+  String version = downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1);
   final String downloadFile =
       bind.mainGetCommonSync(key: 'download-file-$version');
   if (downloadFile.startsWith('error:')) {
     final error = downloadFile.replaceFirst('error:', '');
-    msgBox(gFFI.sessionId, 'custom-nocancel-nok-hasclose', 'Error', error,
-        updateUrl, gFFI.dialogManager);
+    msgBox(gFFI.sessionId, 'custom-nocancel-nook-hasclose', 'Error', error,
+        releasePageUrl, gFFI.dialogManager);
     return;
   }
-  if (!isDirectDownload) {
-    downloadUrl = '$downloadUrl/$downloadFile';
-  }
+  downloadUrl = '$downloadUrl/$downloadFile';
 
   SimpleWrapper downloadId = SimpleWrapper('');
   SimpleWrapper<VoidCallback> onCanceled = SimpleWrapper(() {});
