@@ -11,8 +11,19 @@ final _isExtracting = false.obs;
 
 void handleUpdate(String releasePageUrl) {
   _isExtracting.value = false;
-  String downloadUrl = releasePageUrl.replaceAll('tag', 'download');
-  String version = downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1);
+  String downloadUrl;
+  if (releasePageUrl.contains('github.com') &&
+      releasePageUrl.contains('releases/tag')) {
+    // SecureDesk: GitHub releases 格式
+    // https://github.com/vlanl/SecureDesk/releases/tag/{version}
+    // → https://github.com/vlanl/SecureDesk/releases/download/{version}/
+    downloadUrl =
+        releasePageUrl.replaceFirst('/tag/', '/download/') + '/';
+  } else {
+    // 原始 RustDesk 服务端格式: /tag/ -> /download/
+    downloadUrl = releasePageUrl.replaceAll('tag', 'download');
+  }
+  String version = releasePageUrl.substring(releasePageUrl.lastIndexOf('/') + 1);
   final String downloadFile =
       bind.mainGetCommonSync(key: 'download-file-$version');
   if (downloadFile.startsWith('error:')) {
