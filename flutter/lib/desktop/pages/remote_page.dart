@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:desktop_multi_window/desktop_multi_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -15,6 +17,7 @@ import '../../common.dart';
 import '../../common/widgets/dialog.dart';
 import '../../common/widgets/toolbar.dart';
 import '../../models/model.dart';
+import '../../models/file_model.dart';
 import '../../models/input_model.dart';
 import '../../models/platform_model.dart';
 import '../../common/shared_state.dart';
@@ -86,6 +89,9 @@ class _RemotePageState extends State<RemotePage>
   late RxBool _remoteCursorMoved;
   late RxBool _keyboardEnabled;
   final _uniqueKey = UniqueKey();
+
+  // SecureDesk: 文件拖拽传输 - 拖拽遮罩层可见性
+  final _dropMaskVisible = false.obs;
 
   var _blockableOverlayState = BlockableOverlayState();
 
@@ -424,30 +430,68 @@ class _RemotePageState extends State<RemotePage>
     bodyWidget() {
       return Stack(
         children: [
-          Container(
-              color: kColorCanvas,
-              child: RawKeyFocusScope(
-                  focusNode: _rawKeyFocusNode,
-                  onFocusChange: (bool imageFocused) {
-                    debugPrint(
-                        "onFocusChange(window active:${!_isWindowBlur}) $imageFocused");
-                    // See [onWindowBlur].
-                    if (isWindows) {
-                      if (_isWindowBlur) {
-                        imageFocused = false;
-                        Future.delayed(Duration.zero, () {
-                          _rawKeyFocusNode.unfocus();
-                        });
+          // SecureDesk: 文件拖拽传输 - DropTarget 包裹远程视频区域
+          DropTarget(
+            onDragDone: (detail) => handleDragDone(detail),
+            onDragEntered: (enter) {
+              _dropMaskVisible.value = true;
+            },
+            onDragExited: (exit) {
+              _dropMaskVisible.value = false;
+            },
+            child: Container(
+                color: kColorCanvas,
+                child: RawKeyFocusScope(
+                    focusNode: _rawKeyFocusNode,
+                    onFocusChange: (bool imageFocused) {
+                      debugPrint(
+                          "onFocusChange(window active:${!_isWindowBlur}) $imageFocused");
+                      // See [onWindowBlur].
+                      if (isWindows) {
+                        if (_isWindowBlur) {
+                          imageFocused = false;
+                          Future.delayed(Duration.zero, () {
+                            _rawKeyFocusNode.unfocus();
+                          });
+                        }
+                        if (imageFocused) {
+                          _ffi.inputModel.enterOrLeave(true);
+                        } else {
+                          _ffi.inputModel.enterOrLeave(false);
+                        }
                       }
-                      if (imageFocused) {
-                        _ffi.inputModel.enterOrLeave(true);
-                      } else {
-                        _ffi.inputModel.enterOrLeave(false);
-                      }
-                    }
-                  },
-                  inputModel: _ffi.inputModel,
-                  child: getBodyForDesktop(context))),
+                    },
+                    inputModel: _ffi.inputModel,
+                    child: getBodyForDesktop(context))),
+          ),
+          // SecureDesk: 拖拽遮罩层 - 拖入文件时显示半透明蓝色提示
+          Obx(() => _dropMaskVisible.isTrue
+              ? Positioned.fill(
+                  child: IgnorePointer(
+                    child: Container(
+                      color: Colors.blue.withOpacity(0.15),
+                      child: Center(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 16),
+                          decoration: BoxDecoration(
+                            color: Colors.blue.withOpacity(0.85),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Text(
+                            'Drop files to send to remote',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              : const Offstage()),
           Stack(
             children: [
               _ffi.ffiModel.pi.isSet.isTrue &&
@@ -676,6 +720,45 @@ class _RemotePageState extends State<RemotePage>
     return Stack(
       children: paints,
     );
+  }
+
+  // SecureDesk: 文件拖拽传输 — 处理拖拽完成事件
+  void handleDragDone(DropDoneDetails details) async {
+    _dropMaskVisible.value = false;
+
+    if (details.files.isEmpty) return;
+
+    // 构建 SelectedItems（本地文件 → 远程）
+    final items = SelectedItems(isLocal: true);
+    for (var file in details.files) {
+      final f = File(file.path);
+      items.add(Entry()
+        ..path = file.path
+        ..name = file.name
+        ..size =
+            FileSystemEntity.isDirectorySync(f.path) ? 0 : f.lengthSync());
+    }
+
+    // 获取远程目录信息
+    final remoteModel = _ffi.fileModel.remoteController;
+    final remoteDirData = remoteModel.directoryData();
+    final currentRemotePath = remoteDirData.directory.path.isNotEmpty
+        ? remoteDirData.directory.path
+        : remoteModel.options.value.home;
+
+    if (!mounted) return;
+
+    // 弹窗让用户确认/修改目标路径
+    final targetPath = await showDialog<String>(
+      context: context,
+      builder: (ctx) => _DropTargetPathDialog(currentPath: currentRemotePath),
+    );
+
+    if (targetPath != null && targetPath.isNotEmpty && mounted) {
+      final targetDir = FileDirectory()..path = targetPath;
+      final customDirData = DirectoryData(targetDir, remoteDirData.options);
+      _ffi.fileModel.localController.sendFiles(items, customDirData);
+    }
   }
 
   @override
@@ -1098,6 +1181,80 @@ class CursorPaint extends StatelessWidget {
         y: y,
         scale: scale,
       ),
+    );
+  }
+}
+
+// SecureDesk: 文件拖拽传输 — 目标路径选择弹窗
+class _DropTargetPathDialog extends StatefulWidget {
+  final String currentPath;
+  const _DropTargetPathDialog({required this.currentPath});
+
+  @override
+  State<_DropTargetPathDialog> createState() => _DropTargetPathDialogState();
+}
+
+class _DropTargetPathDialogState extends State<_DropTargetPathDialog> {
+  late final TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(text: widget.currentPath);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return AlertDialog(
+      title: const Text('Select Remote Destination'),
+      content: SizedBox(
+        width: 420,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Enter the destination path on the remote device:',
+              style: TextStyle(
+                fontSize: 13,
+                color: isDark ? Colors.grey[400] : Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _controller,
+              autofocus: true,
+              decoration: InputDecoration(
+                labelText: 'Remote path',
+                hintText: r'C:\Users\Admin\Desktop',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.clear, size: 18),
+                  onPressed: () => _controller.clear(),
+                ),
+              ),
+              onSubmitted: (value) => Navigator.pop(context, value),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: () => Navigator.pop(context, _controller.text),
+          child: const Text('Send'),
+        ),
+      ],
     );
   }
 }
