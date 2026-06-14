@@ -431,6 +431,49 @@ def build_flutter_arch_manjaro(version, features):
     system2('HBB=`pwd`/.. FLUTTER=1 makepkg -f')
 
 
+def _patch_desktop_drop():
+    """Fix desktop_drop 0.4.4 Windows plugin bug: missing *pdwEffect = DROPEFFECT_COPY
+    in DragEnter/DragOver causes 'prohibited' cursor when dragging files."""
+    import re as _re
+    cpp_path = Path('windows/flutter/ephemeral/.plugin_symlinks/desktop_drop/windows/desktop_drop_plugin.cpp')
+    if not cpp_path.exists():
+        print('[patch] desktop_drop plugin not found, skip')
+        return
+    content = cpp_path.read_text(encoding='utf-8')
+    original = content
+
+    # Fix 1: DragEnter - add *pdwEffect DROPEFFECT_COPY, return S_OK
+    content = _re.sub(
+        r'(channel_->InvokeMethod\("entered".*?\)\s*\);)(\s*\n\s*return 0;\s*\n\s*\})',
+        r'\1\n        *pdwEffect = DROPEFFECT_COPY;\n        return S_OK;\n    }',
+        content, flags=_re.DOTALL,
+    )
+    # Fix 2: DragOver - add *pdwEffect DROPEFFECT_COPY, return S_OK
+    content = _re.sub(
+        r'(channel_->InvokeMethod\("updated".*?\)\s*\);)(\s*\n\s*return 0;\s*\n\s*\})',
+        r'\1\n        *pdwEffect = DROPEFFECT_COPY;\n        return S_OK;\n    }',
+        content, flags=_re.DOTALL,
+    )
+    # Fix 3: DragLeave - return S_OK instead of 0
+    content = _re.sub(
+        r'(channel_->InvokeMethod\("exited".*?\)\s*\);)(\s*\n\s*return 0;\s*\n\s*\})',
+        r'\1\n        return S_OK;\n    }',
+        content, flags=_re.DOTALL,
+    )
+    # Fix 4: Drop - add *pdwEffect DROPEFFECT_COPY, return S_OK
+    content = _re.sub(
+        r'(channel_->InvokeMethod\("performOperation".*?\)\s*\);)(\s*\n\s*return 0;\s*\n\s*\})',
+        r'\1\n\n        *pdwEffect = DROPEFFECT_COPY;\n        return S_OK;\n    }',
+        content, flags=_re.DOTALL,
+    )
+
+    if content != original:
+        cpp_path.write_text(content, encoding='utf-8')
+        print('[patch] desktop_drop_plugin.cpp patched: *pdwEffect = DROPEFFECT_COPY')
+    else:
+        print('[patch] desktop_drop_plugin.cpp already patched')
+
+
 def build_flutter_windows(version, features, skip_portable_pack):
     if not skip_cargo:
         system2(f'cargo build --locked --features {features} --lib --release')
@@ -438,6 +481,8 @@ def build_flutter_windows(version, features, skip_portable_pack):
             print("cargo build failed, please check rust source code.")
             exit(-1)
     os.chdir('flutter')
+    system2('flutter pub get')
+    _patch_desktop_drop()
     system2('flutter build windows --release')
     os.chdir('..')
     shutil.copy2('target/release/deps/dylib_virtual_display.dll',
