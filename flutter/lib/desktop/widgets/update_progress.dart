@@ -9,30 +9,46 @@ import 'package:url_launcher/url_launcher.dart';
 
 final _isExtracting = false.obs;
 
-void handleUpdate(String releasePageUrl) {
+void handleUpdate(String updateUrl) {
   _isExtracting.value = false;
   String downloadUrl;
-  if (releasePageUrl.contains('github.com') &&
-      releasePageUrl.contains('releases/tag')) {
-    // SecureDesk: GitHub releases 格式
-    // https://github.com/vlanl/SecureDesk/releases/tag/{version}
-    // → https://github.com/vlanl/SecureDesk/releases/download/{version}/
+
+  // 检查是否已是直接下载文件地址（如服务端按架构返回的直接下载链接）
+  final isDirectDownload = RegExp(r'\.(exe|apk|dmg|msi|pkg|zip|AppImage)$')
+      .hasMatch(updateUrl);
+  if (isDirectDownload) {
+    // 已是完整下载地址，直接使用
+    downloadUrl = updateUrl;
+  } else if (updateUrl.contains('github.com') &&
+      updateUrl.contains('releases/tag')) {
+    // GitHub releases tag 格式: /tag/{version} -> /download/{version}/
     downloadUrl =
-        releasePageUrl.replaceFirst('/tag/', '/download/') + '/';
+        updateUrl.replaceFirst('/tag/', '/download/') + '/';
   } else {
     // 原始 RustDesk 服务端格式: /tag/ -> /download/
-    downloadUrl = releasePageUrl.replaceAll('tag', 'download');
+    downloadUrl = updateUrl.replaceAll('tag', 'download');
   }
-  String version = releasePageUrl.substring(releasePageUrl.lastIndexOf('/') + 1);
+
+  String version;
+  if (isDirectDownload) {
+    // 从文件名中提取版本号，例如 securedesk-1.4.8-x86_64.exe -> 1.4.8
+    final lastSlash = updateUrl.lastIndexOf('/');
+    final firstDash = updateUrl.indexOf('-', lastSlash + 1);
+    version = firstDash > 0 ? updateUrl.substring(lastSlash + 1, firstDash) : '';
+  } else {
+    version = updateUrl.substring(updateUrl.lastIndexOf('/') + 1);
+  }
   final String downloadFile =
       bind.mainGetCommonSync(key: 'download-file-$version');
   if (downloadFile.startsWith('error:')) {
     final error = downloadFile.replaceFirst('error:', '');
-    msgBox(gFFI.sessionId, 'custom-nocancel-nook-hasclose', 'Error', error,
-        releasePageUrl, gFFI.dialogManager);
+    msgBox(gFFI.sessionId, 'custom-nocancel-nok-hasclose', 'Error', error,
+        updateUrl, gFFI.dialogManager);
     return;
   }
-  downloadUrl = '$downloadUrl/$downloadFile';
+  if (!isDirectDownload) {
+    downloadUrl = '$downloadUrl/$downloadFile';
+  }
 
   SimpleWrapper downloadId = SimpleWrapper('');
   SimpleWrapper<VoidCallback> onCanceled = SimpleWrapper(() {});

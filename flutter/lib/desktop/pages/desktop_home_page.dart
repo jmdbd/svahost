@@ -860,22 +860,21 @@ class _DesktopHomePageState extends State<DesktopHomePage>
 
   Widget buildHelpCards(String updateUrl) {
     // SecureDesk: 允许自定义客户端显示更新卡片，移除 isCustomClient 和 uriPrefix 守卫
+    // updateUrl 是服务端根据当前架构返回的直接下载地址，如：
+    // https://github.com/vlanl/SecureDesk/releases/download/1.4.8/securedesk-1.4.8-x86_64.exe
     if (updateUrl.isNotEmpty && !isCardClosed) {
       final isToUpdate = (isWindows || isMacOS) && bind.mainIsInstalled();
       final newVersion = bind.mainGetNewVersion();
-      // SecureDesk: 使用 GitHub releases 页面作为版本发布页和下载源
-      final releasePageUrl =
-          'https://github.com/vlanl/SecureDesk/releases/tag/$newVersion';
       String btnText = isToUpdate ? 'Update' : 'Download';
       GestureTapCallback onPressed = () async {
-        // Download 模式：打开 GitHub releases 页面让用户手动选择平台下载
-        final Uri url = Uri.parse(releasePageUrl);
+        // Download 模式：直接打开服务端配置的下载地址
+        final Uri url = Uri.parse(updateUrl);
         await launchUrl(url);
       };
       if (isToUpdate) {
-        // Update 模式：使用 handleUpdate 自动下载安装（支持 GitHub releases URL）
+        // Update 模式：使用服务端返回的下载地址自动下载安装
         onPressed = () {
-          handleUpdate(releasePageUrl);
+          handleUpdate(updateUrl);
         };
       }
       return buildInstallCard(
@@ -885,7 +884,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           onPressed,
           closeButton: true,
           help: isToUpdate ? 'Changelog' : null,
-          link: isToUpdate ? releasePageUrl : null);
+          link: isToUpdate ? updateUrl.replaceAll(RegExp(r'/[^/]+$'), '/tag/$newVersion') : null);
     }
     if (systemError.isNotEmpty) {
       return buildInstallCard("", systemError, "", () {});
