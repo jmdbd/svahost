@@ -956,7 +956,8 @@ pub fn main_get_option(key: String) -> String {
 }
 
 pub fn main_get_option_sync(key: String) -> SyncReturn<String> {
-    SyncReturn(get_option(key))
+    let v = get_option(&key);
+    SyncReturn(v)
 }
 
 pub fn main_get_error() -> String {
@@ -1008,6 +1009,12 @@ pub fn main_set_option(key: String, value: String) {
         );
     }
 
+    // 当隐藏托盘图标选项变更时,通过 IPC 通知托盘进程
+    #[cfg(windows)]
+    let notify_hide_tray = key == config::keys::OPTION_HIDE_TRAY;
+    #[cfg(not(windows))]
+    let notify_hide_tray = false;
+
     // If `is_allow_tls_fallback` and https proxy is used, we need to restart rendezvous mediator.
     // No need to check if https proxy is used, because this option does not change frequently
     // and restarting mediator is safe even https proxy is not used.
@@ -1028,6 +1035,12 @@ pub fn main_set_option(key: String, value: String) {
         crate::common::test_rendezvous_server();
     } else {
         set_option(key, value.clone());
+    }
+    if notify_hide_tray {
+        let hide = value == "Y";
+        std::thread::spawn(move || {
+            ui_interface::send_to_tray(hide);
+        });
     }
 }
 

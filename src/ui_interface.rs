@@ -165,10 +165,13 @@ pub fn get_option<T: AsRef<str>>(key: T) -> String {
     {
         let map = OPTIONS.lock().unwrap();
         if let Some(v) = map.get(key.as_ref()) {
-            v.to_owned()
-        } else {
-            "".to_owned()
+            if !v.is_empty() {
+                return v.to_owned();
+            }
         }
+        // Fall back to Config::get_option for defaults (IPC-synced OPTIONS may miss
+        // some keys that were stripped by purify_options, e.g. hide-tray).
+        Config::get_option(key.as_ref())
     }
     #[cfg(any(target_os = "android", target_os = "ios"))]
     {
@@ -1450,6 +1453,14 @@ pub fn option_synced() -> bool {
 pub(crate) async fn send_to_cm(data: &ipc::Data) {
     if let Ok(mut c) = ipc::connect(1000, "_cm").await {
         c.send(data).await.ok();
+    }
+}
+
+#[cfg(windows)]
+#[tokio::main(flavor = "current_thread")]
+pub async fn send_to_tray(hide: bool) {
+    if let Ok(mut c) = ipc::connect(1000, "hide-tray").await {
+        c.send(&ipc::Data::HideTray(hide)).await.ok();
     }
 }
 

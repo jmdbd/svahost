@@ -813,18 +813,20 @@ Future<List<TToggleMenu>> toolbarCursor(
     v.add(TToggleMenu(
         child: Text(translate('Follow remote cursor')),
         value: value,
-        onChanged: (value) async {
+        onChanged: (value) {
           if (value == null) return;
-          await bind.sessionToggleOption(sessionId: sessionId, value: option);
-          value = bind.sessionGetToggleOptionSync(
-              sessionId: sessionId, arg: option);
-          showCursorLockState.value = value;
-          if (!showCursorEnabled) {
-            await bind.sessionToggleOption(
-                sessionId: sessionId, value: showCursorOption);
-            showCursorState.value = bind.sessionGetToggleOptionSync(
-                sessionId: sessionId, arg: showCursorOption);
-          }
+          () async {
+            await bind.sessionToggleOption(sessionId: sessionId, value: option);
+            value = bind.sessionGetToggleOptionSync(
+                sessionId: sessionId, arg: option);
+            showCursorLockState.value = value ?? false;
+            if (!showCursorEnabled) {
+              await bind.sessionToggleOption(
+                  sessionId: sessionId, value: showCursorOption);
+              showCursorState.value = bind.sessionGetToggleOptionSync(
+                  sessionId: sessionId, arg: showCursorOption);
+            }
+          }();
         }));
   }
   // follow remote window focus

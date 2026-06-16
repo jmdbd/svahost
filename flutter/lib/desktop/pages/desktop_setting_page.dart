@@ -428,9 +428,9 @@ class _GeneralState extends State<_General> {
 
   Widget theme() {
     final current = MyTheme.getThemeModePreference().toShortString();
-    onChanged(String value) async {
-      await MyTheme.changeDarkMode(MyTheme.themeModeFromString(value));
-      setState(() {});
+    onChanged(String value) {
+      MyTheme.changeDarkMode(MyTheme.themeModeFromString(value))
+          .then((_) => setState(() {}));
     }
 
     final isOptFixed = isOptionFixed(kCommConfKeyTheme);
@@ -1260,7 +1260,9 @@ class _SafetyState extends State<_Safety> with AutomaticKeepAliveClientMixin {
         _OptionCheckBox(context, 'allow-only-conn-window-open-tip',
             'allow-only-conn-window-open',
             reverse: false, enabled: enabled),
-      if (bind.mainIsInstalled() && !isUnlockPinDisabled()) unlockPin()
+      if (bind.mainIsInstalled() && !isUnlockPinDisabled()) unlockPin(),
+      _OptionCheckBox(context, 'Hide system tray icon', 'hide-tray',
+          reverse: false, enabled: enabled),
     ]);
   }
 
@@ -1767,9 +1769,9 @@ class _DisplayState extends State<_Display> {
 
   Widget viewStyle(BuildContext context) {
     final isOptFixed = isOptionFixed(kOptionViewStyle);
-    onChanged(String value) async {
-      await bind.mainSetUserDefaultOption(key: kOptionViewStyle, value: value);
-      setState(() {});
+    onChanged(String value) {
+      bind.mainSetUserDefaultOption(key: kOptionViewStyle, value: value)
+          .then((_) => setState(() {}));
     }
 
     final groupValue = bind.mainGetUserDefaultOption(key: kOptionViewStyle);
@@ -1789,18 +1791,18 @@ class _DisplayState extends State<_Display> {
 
   Widget scrollStyle(BuildContext context) {
     final isOptFixed = isOptionFixed(kOptionScrollStyle);
-    onChanged(String value) async {
-      await bind.mainSetUserDefaultOption(
-          key: kOptionScrollStyle, value: value);
-      setState(() {});
+    onChanged(String value) {
+      bind.mainSetUserDefaultOption(
+          key: kOptionScrollStyle, value: value)
+          .then((_) => setState(() {}));
     }
 
     final groupValue = bind.mainGetUserDefaultOption(key: kOptionScrollStyle);
 
-    onEdgeScrollEdgeThicknessChanged(double value) async {
-      await bind.mainSetUserDefaultOption(
-          key: kOptionEdgeScrollEdgeThickness, value: value.round().toString());
-      setState(() {});
+    onEdgeScrollEdgeThicknessChanged(double value) {
+      bind.mainSetUserDefaultOption(
+          key: kOptionEdgeScrollEdgeThickness, value: value.round().toString())
+          .then((_) => setState(() {}));
     }
 
     return _Card(title: 'Default Scroll Style', children: [
@@ -1835,10 +1837,10 @@ class _DisplayState extends State<_Display> {
   }
 
   Widget imageQuality(BuildContext context) {
-    onChanged(String value) async {
-      await bind.mainSetUserDefaultOption(
-          key: kOptionImageQuality, value: value);
-      setState(() {});
+    onChanged(String value) {
+      bind.mainSetUserDefaultOption(
+          key: kOptionImageQuality, value: value)
+          .then((_) => setState(() {}));
     }
 
     final isOptFixed = isOptionFixed(kOptionImageQuality);
@@ -1892,10 +1894,10 @@ class _DisplayState extends State<_Display> {
   }
 
   Widget codec(BuildContext context) {
-    onChanged(String value) async {
-      await bind.mainSetUserDefaultOption(
-          key: kOptionCodecPreference, value: value);
-      setState(() {});
+    onChanged(String value) {
+      bind.mainSetUserDefaultOption(
+          key: kOptionCodecPreference, value: value)
+          .then((_) => setState(() {}));
     }
 
     final groupValue =
@@ -1962,9 +1964,9 @@ class _DisplayState extends State<_Display> {
     }
 
     final key = 'privacy-mode-impl-key';
-    onChanged(String value) async {
-      await bind.mainSetOption(key: key, value: value);
-      setState(() {});
+    onChanged(String value) {
+      bind.mainSetOption(key: key, value: value)
+          .then((_) => setState(() {}));
     }
 
     String groupValue = bind.mainGetOptionSync(key: key);
@@ -2570,7 +2572,7 @@ Widget _Radio<T>(BuildContext context,
     {required T value,
     required T groupValue,
     required String label,
-    required Function(T value)? onChanged,
+    required void Function(T value)? onChanged,
     bool autoNewLine = true}) {
   final onChange2 = onChanged != null
       ? (T? value) {
