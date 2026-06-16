@@ -1036,6 +1036,7 @@ pub fn main_set_option(key: String, value: String) {
     } else {
         set_option(key, value.clone());
     }
+    #[cfg(windows)]
     if notify_hide_tray {
         let hide = value == "Y";
         std::thread::spawn(move || {
