@@ -1,4 +1,4 @@
-package com.vlanl.securedesk
+package com.vlanl.svahost
 
 import java.nio.ByteBuffer
 import java.util.Timer

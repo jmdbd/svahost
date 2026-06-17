@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "vlanl" "\0"
-            VALUE "FileDescription", "SecureDesk Remote Desktop" "\0"
+            VALUE "FileDescription", "Svahost Remote Desktop" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "securedesk" "\0"
+            VALUE "InternalName", "svahost" "\0"
             VALUE "LegalCopyright", "Copyright © 2025 vlanl. All rights reserved." "\0"
-            VALUE "OriginalFilename", "securedesk.exe" "\0"
-            VALUE "ProductName", "SecureDesk" "\0"
+            VALUE "OriginalFilename", "svahost.exe" "\0"
+            VALUE "ProductName", "Svahost" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

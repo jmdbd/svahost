@@ -1,8 +1,8 @@
-# SecureDesk
+# Svahost
 
 > 基于 RustDesk 1.4.7 的企业级远程桌面解决方案
 
-SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk) 1.4.7 的企业定制版本，由 vlanl 团队维护。开箱即用，无需配置，数据自主可控。
+Svahost 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk) 1.4.7 的企业定制版本，由 vlanl 团队维护。开箱即用，无需配置，数据自主可控。
 
 ---
 
@@ -24,11 +24,11 @@ SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk
 
 | 项目 | 修改范围 |
 |------|----------|
-| 应用名称 | SecureDesk（全平台） |
+| 应用名称 | Svahost（全平台） |
 | 服务器地址 | `rs-ny.vlanl.com` |
-| Windows 安装路径 | `Program Files\SecureDesk\securedesk.exe` |
-| 语言文件 | 51 个语言文件全部 rebrand（RustDesk → SecureDesk） |
-| Android 包名 | `com.carriez.flutter_hbb` → `com.vlanl.securedesk` |
+| Windows 安装路径 | `Program Files\Svahost\svahost.exe` |
+| 语言文件 | 51 个语言文件全部 rebrand（RustDesk → Svahost） |
+| Android 包名 | `com.carriez.flutter_hbb` → `com.vlanl.svahost` |
 | 深度链接 | `rustdesk://` 协议保留不改（保证现有链接兼容） |
 
 ### Flutter UI 增强
@@ -37,7 +37,7 @@ SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk
 |------|------|
 | 左侧连接面板 | ID 卡片（浅蓝背景）+ 密码卡片 + 远程 ID 输入框 + 2×2 按钮网格（传输文件/摄像头/终端/连接） |
 | 绿色主题 | 按钮渐变 `#43A047→#2E7D32`，悬停边框绿色，远程 ID 聚焦绿色 |
-| SecureDesk 右侧面板 | 专属 Banner（绿色渐变 + 自然装饰动画）+ 设备列表 + 端到端加密安全提示 |
+| Svahost 右侧面板 | 专属 Banner（绿色渐变 + 自然装饰动画）+ 设备列表 + 端到端加密安全提示 |
 | 状态栏 | 左下角固定就绪状态指示（绿点 + 服务连接状态 + 每秒轮询） |
 | 布局优化 | helpCards/pluginEntry/状态栏固定底部，不受滚动裁剪 |
 | 暗黑模式 | 全界面（左栏/右栏/面板/分割线/输入框/按钮边框）适配暗黑主题 |
@@ -56,7 +56,7 @@ SecureDesk 是基于开源项目 [RustDesk](https://github.com/rustdesk/rustdesk
 |------|------|
 | 全平台构建 | Windows (x64/i686) + Linux (x64/aarch64/armv7) + macOS (x64/aarch64) + Android + iOS |
 | Secrets 注入 | 6 个 env 变量通过 `option_env!` 编译期注入 |
-| 产物命名 | 全部 `securedesk-*` 格式 |
+| 产物命名 | 全部 `svahost-*` 格式 |
 | 手动触发 | 支持 `workflow_dispatch` 手动触发构建 |
 
 ---
@@ -79,8 +79,8 @@ sudo apt-get install -y pkg-config libssl-dev libxdo-dev libx11-dev libxext-dev 
 
 ```bash
 # 1. 克隆
-git clone --recurse-submodules https://github.com/vlanl/SecureDesk.git
-cd SecureDesk
+git clone --recurse-submodules https://github.com/vlanl/Svahost.git
+cd Svahost
 
 # 2. 编译 Rust 端
 cargo build --release
@@ -89,15 +89,15 @@ cargo build --release
 cd flutter && flutter build windows --release
 ```
 
-> **注意**：本地编译时 `option_env!` 无法读取 CI secrets，会回退到 `config.rs` 中的 fallback 值（`rs-ny.vlanl.com` / `SecureDesk`）。
+> **注意**：本地编译时 `option_env!` 无法读取 CI secrets，会回退到 `config.rs` 中的 fallback 值（`rs-ny.vlanl.com` / `Svahost`）。
 
 ### 子模块
 
 ```
-vlanl/SecureDesk (master)
+vlanl/Svahost (master)
 ├── libs/hbb_common → vlanl/hbb_common (main)
 │   └── 包含 build.rs secrets 注入 + config.rs 默认配置 + config.rs 中文注释
-├── flutter/         → Flutter 前端（含 SecureDesk 专属 UI）
+├── flutter/         → Flutter 前端（含 Svahost 专属 UI）
 ├── src/             → Rust 后端（含企业定制功能）
 └── .github/         → CI 工作流
 ```
@@ -135,7 +135,7 @@ OVERWRITE_SETTINGS > CONFIG2.options > DEFAULT_SETTINGS
 
 | Secret | 说明 | 示例 |
 |--------|------|------|
-| `APP_NAME` | 应用名称 | `SecureDesk` |
+| `APP_NAME` | 应用名称 | `Svahost` |
 | `RENDEZVOUS_SERVER` | ID/中继服务器 | `rs-ny.vlanl.com` |
 | `RELAY_SERVER` | 中继服务器 | `rs-ny.vlanl.com` |
 | `API_SERVER` | API 服务器 | `https://xxxx.xxxx.com` |
@@ -166,7 +166,7 @@ Flutter 界面完整支持暗黑模式，通过 `Theme.of(context).brightness ==
 flutter_rust_bridge_codegen \
   --rust-input src/flutter_ffi.rs \
   --dart-output flutter/lib/generated_bridge.dart \
-  --class-name SecureDesk
+  --class-name Svahost
 ```
 
 ### Windows 浅克隆无法推送
@@ -196,4 +196,4 @@ git push origin refs/heads/main:refs/heads/main
 
 ## 许可
 
-SecureDesk 基于 [RustDesk](https://github.com/rustdesk/rustdesk) 开发，遵循 AGPL-3.0 许可证。
+Svahost 基于 [RustDesk](https://github.com/rustdesk/rustdesk) 开发，遵循 AGPL-3.0 许可证。

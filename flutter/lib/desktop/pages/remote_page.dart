@@ -90,7 +90,7 @@ class _RemotePageState extends State<RemotePage>
   late RxBool _keyboardEnabled;
   final _uniqueKey = UniqueKey();
 
-  // SecureDesk: 文件拖拽传输 - 拖拽遮罩层可见性
+  // Svahost: 文件拖拽传输 - 拖拽遮罩层可见性
   final _dropMaskVisible = false.obs;
 
   var _blockableOverlayState = BlockableOverlayState();
@@ -430,7 +430,7 @@ class _RemotePageState extends State<RemotePage>
     bodyWidget() {
       return Stack(
         children: [
-          // SecureDesk: 文件拖拽传输 - DropTarget 包裹远程视频区域
+          // Svahost: 文件拖拽传输 - DropTarget 包裹远程视频区域
           DropTarget(
             onDragDone: (detail) => handleDragDone(detail),
             onDragEntered: (enter) {
@@ -464,7 +464,7 @@ class _RemotePageState extends State<RemotePage>
                     inputModel: _ffi.inputModel,
                     child: getBodyForDesktop(context))),
           ),
-          // SecureDesk: 拖拽遮罩层 - 拖入文件时显示半透明蓝色提示
+          // Svahost: 拖拽遮罩层 - 拖入文件时显示半透明蓝色提示
           Obx(() => _dropMaskVisible.isTrue
               ? Positioned.fill(
                   child: IgnorePointer(
@@ -722,7 +722,7 @@ class _RemotePageState extends State<RemotePage>
     );
   }
 
-  // SecureDesk: 文件拖拽传输 — 处理拖拽完成事件
+  // Svahost: 文件拖拽传输 — 处理拖拽完成事件
   void handleDragDone(DropDoneDetails details) async {
     _dropMaskVisible.value = false;
 
@@ -1185,7 +1185,7 @@ class CursorPaint extends StatelessWidget {
   }
 }
 
-// SecureDesk: 文件拖拽传输 — 目标路径选择弹窗
+// Svahost: 文件拖拽传输 — 目标路径选择弹窗
 class _DropTargetPathDialog extends StatefulWidget {
   final String currentPath;
   const _DropTargetPathDialog({required this.currentPath});

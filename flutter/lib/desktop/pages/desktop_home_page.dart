@@ -36,7 +36,7 @@ class DesktopHomePage extends StatefulWidget {
 
 const borderColor = Color(0xFF2F65BA);
 
-// SecureDesk green theme colors
+// Svahost green theme colors
 const Color _sdGreenPrimary = Color(0xFF2E7D32);
 const Color _sdGreenLight = Color(0xFF43A047);
 const Color _sdGreenBorder = Color(0xFF66BB6A);
@@ -202,7 +202,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
-      child: const SecureDeskRightPanel(),
+      child: const SvahostRightPanel(),
     );
   }
 
@@ -859,7 +859,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
   }
 
   Widget buildHelpCards(String updateUrl) {
-    // SecureDesk: 允许自定义客户端显示更新卡片，移除 isCustomClient 和 uriPrefix 守卫
+    // Svahost: 允许自定义客户端显示更新卡片，移除 isCustomClient 和 uriPrefix 守卫
     // 服务端返回 tag 格式 URL (如 .../version/tag/1.4.8)，客户端负责拼接文件名
     // download.php 根据文件名检测平台，302 跳转到数据库配置的下载地址
     if (updateUrl.isNotEmpty && !isCardClosed) {
@@ -891,7 +891,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
           closeButton: true,
           help: isToUpdate ? 'Changelog' : null,
           link: isToUpdate
-              ? 'https://github.com/vlanl/SecureDesk/releases/tag/$newVersion'
+              ? 'https://github.com/vlanl/Svahost/releases/tag/$newVersion'
               : null);
     }
     if (systemError.isNotEmpty) {

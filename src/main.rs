@@ -49,7 +49,7 @@ fn main() {
     let matches = App::new("svahost")
         .version(crate::VERSION)
         .author("vlanl")
-        .about("SecureDesk command line tool")
+        .about("Svahost command line tool")
         .args_from_usage(&args)
         .get_matches();
     use hbb_common::{config::LocalConfig, env_logger::*};

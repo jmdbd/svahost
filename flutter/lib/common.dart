@@ -3988,7 +3988,7 @@ void earlyAssert() {
 
 void checkUpdate() {
   if (!isWeb) {
-    // SecureDesk: 允许自定义客户端也检查更新
+    // Svahost: 允许自定义客户端也检查更新
     platformFFI.registerEventHandler(
         kCheckSoftwareUpdateFinish, kCheckSoftwareUpdateFinish,
         (Map<String, dynamic> evt) async {

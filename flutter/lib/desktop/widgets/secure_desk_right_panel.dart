@@ -1,4 +1,4 @@
-// SecureDesk right panel - decorative banner + real PeerTabPage + security tip
+// Svahost right panel - decorative banner + real PeerTabPage + security tip
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hbb/common.dart';
@@ -6,14 +6,14 @@ import 'package:flutter_hbb/common/widgets/peer_tab_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_setting_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_tab_page.dart';
 
-class SecureDeskRightPanel extends StatefulWidget {
-  const SecureDeskRightPanel({Key? key}) : super(key: key);
+class SvahostRightPanel extends StatefulWidget {
+  const SvahostRightPanel({Key? key}) : super(key: key);
 
   @override
-  State<SecureDeskRightPanel> createState() => _SecureDeskRightPanelState();
+  State<SvahostRightPanel> createState() => _SvahostRightPanelState();
 }
 
-class _SecureDeskRightPanelState extends State<SecureDeskRightPanel>
+class _SvahostRightPanelState extends State<SvahostRightPanel>
     with SingleTickerProviderStateMixin {
   late final AnimationController _pulseController;
 

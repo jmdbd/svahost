@@ -11,7 +11,7 @@ final _isExtracting = false.obs;
 
 void handleUpdate(String releasePageUrl) {
   _isExtracting.value = false;
-  // SecureDesk: 服务端返回 tag 格式 URL (.../version/tag/1.4.8)
+  // Svahost: 服务端返回 tag 格式 URL (.../version/tag/1.4.8)
   // 转换为 download/{version}，再拼接平台文件名，通过 download.php 302 跳转到真实下载地址
   String downloadUrl = releasePageUrl.replaceAll('tag', 'download');
   String version = downloadUrl.substring(downloadUrl.lastIndexOf('/') + 1);

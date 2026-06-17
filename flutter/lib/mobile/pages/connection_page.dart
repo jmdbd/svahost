@@ -124,7 +124,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
         ? const SizedBox(height: 0)
         : InkWell(
             onTap: () async {
-              // SecureDesk: 使用服务端返回的下载地址
+              // Svahost: 使用服务端返回的下载地址
               String downloadBase = updateUrl.replaceAll('tag', 'download');
               String version =
                   downloadBase.substring(downloadBase.lastIndexOf('/') + 1);
