@@ -46,7 +46,7 @@ fn main() {
         -k, --key=[KEY] ''
        -s, --server=[] 'Start server'",
     );
-    let matches = App::new("securedesk")
+    let matches = App::new("svahost")
         .version(crate::VERSION)
         .author("vlanl")
         .about("SecureDesk command line tool")

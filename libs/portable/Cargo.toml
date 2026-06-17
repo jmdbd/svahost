@@ -28,7 +28,7 @@ native-windows-gui = {version = "1.0", default-features = false, features = ["an
 [package.metadata.winres]
 LegalCopyright = "Copyright © 2025 vlanl Ltd. All rights reserved."
 ProductName = "SecureDesk"
-OriginalFilename = "securedesk.exe"
+OriginalFilename = "svahost.exe"
 FileDescription = "SecureDesk Remote Desktop"
 #ProductVersion = ""
 
