@@ -460,7 +460,7 @@ pub fn set_option(key: String, value: String) {
         #[cfg(windows)]
         {
             let hide = value == "Y";
-            crate::allow_err!(send_to_tray(hide));
+            allow_err!(send_to_tray(hide));
         }
     }
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
