@@ -424,7 +424,7 @@ pub fn set_options(m: HashMap<String, String>) {
 #[inline]
 /// SecureDesk: Notify service process to show/hide tray icon.
 #[cfg(windows)]
-pub async fn send_to_tray(hide: bool) {
+pub fn send_to_tray(hide: bool) {
     // Write directly to config so tray startup check reads the latest value
     Config::set_option("hide-tray".to_string(), if hide { "Y".to_string() } else { "N".to_string() } );
 }
@@ -460,7 +460,7 @@ pub fn set_option(key: String, value: String) {
         #[cfg(windows)]
         {
             let hide = value == "Y";
-            allow_err!(send_to_tray(hide));
+            send_to_tray(hide);
         }
     }
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
