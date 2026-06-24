@@ -259,7 +259,7 @@ jobs:
           mv ./flutter/build/windows/${{ matrix.job.flutter-arch }}/runner/Release ./rustdesk
 
           # Download usbmmidd_v2.zip and extract it to ./rustdesk
-          Invoke-WebRequest -Uri https://github.com/securedesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip -OutFile usbmmidd_v2.zip
+          Invoke-WebRequest -Uri https://github.com/rustdesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip -OutFile usbmmidd_v2.zip
           Expand-Archive usbmmidd_v2.zip -DestinationPath .
           Remove-Item -Path usbmmidd_v2\Win32 -Recurse
           Remove-Item -Path "usbmmidd_v2\deviceinstaller64.exe", "usbmmidd_v2\deviceinstaller.exe", "usbmmidd_v2\usbmmidd.bat"
@@ -408,7 +408,7 @@ jobs:
           submodules: recursive
 
       - name: Install LLVM and Clang
-        uses: securedesk-org/install-llvm-action-32bit@6aa7d9ad3df84dff01cd4596dd0fc880a7f47fce # no release tag; commit 2026-05-26
+        uses: rustdesk-org/install-llvm-action-32bit@6aa7d9ad3df84dff01cd4596dd0fc880a7f47fce # no release tag; commit 2026-05-26
         with:
           version: ${{ env.LLVM_VERSION }}
 
@@ -458,12 +458,12 @@ jobs:
           # Patch sciter x86
           sed -i 's/branch = "dyn"/branch = "dyn_x86"/g' ./Cargo.toml
           cargo update -p sciter-rs --precise 674e07d3066ca9a92ced3816203ab6b652629d1e
-          cargo build --locked --features inline,vram,hwcodec --release --bins
+          cargo build --features inline,vram,hwcodec --release --bins
           mkdir -p ./Release
           mv ./target/release/rustdesk.exe ./Release/rustdesk.exe
           curl -LJ -o ./Release/sciter.dll https://github.com/c-smile/sciter-sdk/raw/master/bin.win/x32/sciter.dll
           echo "output_folder=./Release" >> $GITHUB_OUTPUT
-          curl -LJ -o ./usbmmidd_v2.zip https://github.com/securedesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip
+          curl -LJ -o ./usbmmidd_v2.zip https://github.com/rustdesk-org/rdev/releases/download/usbmmidd_v2/usbmmidd_v2.zip
           unzip usbmmidd_v2.zip
           # Do not remove x64 files, because the user may run the 32bit version on a 64bit system.
           # Do not remove ./usbmmidd_v2/deviceinstaller64.exe, as x86 exe cannot install and uninstall drivers when running on x64,
@@ -614,7 +614,7 @@ jobs:
       - name: Build rustdesk lib
         run: |
           rustup target add ${{ matrix.job.target }}
-          cargo build --locked --features flutter,hwcodec --release --target aarch64-apple-ios --lib
+          cargo build --features flutter,hwcodec --release --target aarch64-apple-ios --lib
           
       - name: Upload liblibrustdesk.a Artifacts
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
@@ -1504,7 +1504,7 @@ jobs:
           name: bridge-artifact
           path: ./
 
-      - uses: securedesk-org/run-on-arch-action@d3fcfbb632b84cf7f6bc772bfaaa2c2f4f8789a8 # no release tag; commit 2026-05-26
+      - uses: rustdesk-org/run-on-arch-action@d3fcfbb632b84cf7f6bc772bfaaa2c2f4f8789a8 # no release tag; commit 2026-05-26
         name: Build rustdesk
         id: vcpkg
         if: matrix.job.arch == 'x86_64' || env.UPLOAD_ARTIFACT == 'true'
@@ -1586,7 +1586,7 @@ jobs:
               export JOBS=""
             fi
             echo $JOBS
-            cargo build --locked --lib $JOBS --features hwcodec,flutter,unix-file-copy-paste --release
+            cargo build --lib $JOBS --features hwcodec,flutter,unix-file-copy-paste --release
             rm -rf target/release/deps target/release/build
             rm -rf ~/.cargo
 
@@ -1706,7 +1706,7 @@ jobs:
 
       - name: Build archlinux package
         if: matrix.job.arch == 'x86_64' && env.UPLOAD_ARTIFACT == 'true'
-        uses: securedesk-org/arch-makepkg-action@04200739ed1d0bf6f2188b6736b26a767c57a7f9 # no release tag; commit 2026-05-26
+        uses: rustdesk-org/arch-makepkg-action@04200739ed1d0bf6f2188b6736b26a767c57a7f9 # no release tag; commit 2026-05-26
         with:
           packages:
           scripts: |
@@ -1788,7 +1788,7 @@ jobs:
           RUST_TOOLCHAIN_VERSION=$(cargo --version | awk '{print $2}')
           echo "RUST_TOOLCHAIN_VERSION=$RUST_TOOLCHAIN_VERSION" >> $GITHUB_ENV
 
-      - uses: securedesk-org/run-on-arch-action@d3fcfbb632b84cf7f6bc772bfaaa2c2f4f8789a8 # no release tag; commit 2026-05-26
+      - uses: rustdesk-org/run-on-arch-action@d3fcfbb632b84cf7f6bc772bfaaa2c2f4f8789a8 # no release tag; commit 2026-05-26
         name: Build rustdesk sciter binary for ${{ matrix.job.arch }}
         id: vcpkg
         with:
@@ -1916,7 +1916,7 @@ jobs:
             # build rustdesk
             python3 ./res/inline-sciter.py
             export CARGO_INCREMENTAL=0
-            cargo build --locked --features inline${{ matrix.job.extra_features }} --release --bins --jobs 1
+            cargo build --features inline${{ matrix.job.extra_features }} --release --bins --jobs 1
             # make debian package
             mkdir -p ./Release
             mv ./target/release/rustdesk ./Release/rustdesk
@@ -1984,7 +1984,7 @@ jobs:
           sudo apt-get install -y libarchive-tools libfuse2
           # set-up appimage-builder
           # https://github.com/AppImage/AppImageKit/issues/1395
-          sudo pip3 install git+https://github.com/securedesk-org/appimage-builder.git
+          sudo pip3 install git+https://github.com/rustdesk-org/appimage-builder.git
           # run appimage-builder
           pushd appimage
           sudo appimage-builder --skip-tests --recipe ./AppImageBuilder-${{ matrix.job.arch }}.yml
@@ -2048,7 +2048,7 @@ jobs:
         run: |
           mv securedesk-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.deb flatpak/rustdesk.deb
 
-      - uses: securedesk-org/run-on-arch-action@d3fcfbb632b84cf7f6bc772bfaaa2c2f4f8789a8 # no release tag; commit 2026-05-26
+      - uses: rustdesk-org/run-on-arch-action@d3fcfbb632b84cf7f6bc772bfaaa2c2f4f8789a8 # no release tag; commit 2026-05-26
         name: Build rustdesk flatpak package for ${{ matrix.job.arch }}
         id: flatpak
         with:
