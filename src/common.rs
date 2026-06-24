@@ -122,9 +122,6 @@ impl Drop for SimpleCallOnReturn {
 }
 
 pub fn global_init() -> bool {
-    // SecureDesk: initialize default settings
-    hbb_common::config::init_securedesk_defaults();
-
     #[cfg(target_os = "linux")]
     {
         if !crate::platform::linux::is_x11() {
