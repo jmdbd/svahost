@@ -165,10 +165,13 @@ pub fn get_option<T: AsRef<str>>(key: T) -> String {
     {
         let map = OPTIONS.lock().unwrap();
         if let Some(v) = map.get(key.as_ref()) {
-            v.to_owned()
-        } else {
-            "".to_owned()
+            if !v.is_empty() {
+                return v.to_owned();
+            }
         }
+        // SecureDesk: Fall back to Config::get_option for defaults —
+        // IPC-synced OPTIONS may miss keys stripped by purify_options.
+        Config::get_option(key.as_ref())
     }
     #[cfg(any(target_os = "android", target_os = "ios"))]
     {
@@ -419,6 +422,13 @@ pub fn set_options(m: HashMap<String, String>) {
 }
 
 #[inline]
+/// SecureDesk: Notify service process to show/hide tray icon.
+#[cfg(windows)]
+pub async fn send_to_tray(hide: bool) {
+    // Write directly to config so tray startup check reads the latest value
+    Config::set_option("hide-tray".to_string(), if hide { "Y".to_string() } else { "N".to_string() } );
+}
+
 pub fn set_option(key: String, value: String) {
     if &key == "stop-service" {
         #[cfg(target_os = "macos")]
@@ -446,6 +456,12 @@ pub fn set_option(key: String, value: String) {
     } else if &key == "audio-input" {
         #[cfg(not(target_os = "ios"))]
         crate::audio_service::restart();
+    } else if &key == "hide-tray" {
+        #[cfg(windows)]
+        {
+            let hide = value == "Y";
+            crate::allow_err!(send_to_tray(hide));
+        }
     }
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
     {

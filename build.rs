@@ -78,6 +78,11 @@ fn install_android_deps() {
 }
 
 fn main() {
+    // SecureDesk: compile-time brand & server injection (must be before gen_version)
+    std::env::set_var("APP_NAME", "SecureDesk");
+    std::env::set_var("RENDEZVOUS_SERVER", "rs-ny.vlanl.com");
+    std::env::set_var("RELAY_SERVER", "rs-ny.vlanl.com");
+
     hbb_common::gen_version();
     install_android_deps();
     #[cfg(all(windows, feature = "inline"))]

@@ -360,6 +360,9 @@ pub enum Data {
     Theme(String),
     Language(String),
     Empty,
+    /// SecureDesk: hide/show tray icon
+    #[cfg(windows)]
+    HideTray(bool),
     Disconnected,
     DataPortableService(DataPortableService),
     #[cfg(feature = "flutter")]
