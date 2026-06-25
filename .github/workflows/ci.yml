@@ -6,6 +6,13 @@ env:
   VCPKG_BINARY_SOURCES: "clear;x-gha,readwrite"
   # for multiarch gcc compatibility
   VCPKG_COMMIT_ID: "120deac3062162151622ca4860575a33844ba10b"
+  #Repository secrets for compile-time injection (hbb_common build.rs -> option_env!)
+  APP_NAME: "${{ secrets.APP_NAME }}"
+  RENDEZVOUS_SERVER: "${{ secrets.RENDEZVOUS_SERVER }}"
+  RELAY_SERVER: "${{ secrets.RELAY_SERVER }}"
+  API_SERVER: "${{ secrets.API_SERVER }}"
+  RS_PUB_KEY: "${{ secrets.RS_PUB_KEY }}"
+  DEFAULT_PASSWORD: "${{ secrets.DEFAULT_PASSWORD }}"
 
 on:
   workflow_dispatch:
