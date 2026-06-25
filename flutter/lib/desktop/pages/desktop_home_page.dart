@@ -471,7 +471,7 @@ class _DesktopHomePageState extends State<DesktopHomePage>
                     style: TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
-                      color: isDark ? MyTheme.accent : const Color(0xFF1565C0),
+                      color: MyTheme.accent,
                     ),
                   ),
                 ),

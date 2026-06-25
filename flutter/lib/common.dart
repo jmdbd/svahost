@@ -454,7 +454,7 @@ class MyTheme {
         style:
             MenuStyle(backgroundColor: MaterialStatePropertyAll(Colors.white))),
     colorScheme: ColorScheme.light(
-        primary: Colors.blue, secondary: accent, background: grayBg),
+        primary: accent, secondary: accent, background: grayBg),
     popupMenuTheme: PopupMenuThemeData(
         color: Colors.white,
         shape: RoundedRectangleBorder(
@@ -562,7 +562,7 @@ class MyTheme {
         style: MenuStyle(
             backgroundColor: MaterialStatePropertyAll(Color(0xFF121212)))),
     colorScheme: ColorScheme.dark(
-      primary: Colors.blue,
+      primary: accent,
       secondary: accent,
       background: Color(0xFF24252B),
     ),
@@ -3783,11 +3783,13 @@ class _LogoState extends State<_Logo> {
             },
           );
           return Container(
-            constraints: BoxConstraints(maxWidth: 300, maxHeight: 60),
+            constraints: BoxConstraints(maxWidth: 300, maxHeight: 36),
             child: image,
-          ).marginOnly(left: 12, right: 12, top: 12);
+          ).marginOnly(left: 12, right: 12, top: 6);
         }
-        return const Offstage();
+        // Return SizedBox.shrink() to avoid occupying space
+        // when the logo is not loaded (prevents top blank area).
+        return SizedBox.shrink();
       },
     );
   }
@@ -3860,12 +3862,19 @@ Widget buildPresetPasswordWarningMobile() {
   }
 }
 
+// Cache the future to avoid recreating it on every rebuild,
+// which would cause the FutureBuilder to flash a loading spinner.
+Future<bool>? _presetPasswordFuture;
+
 Widget buildPresetPasswordWarning() {
+  _presetPasswordFuture ??= bind.isPresetPassword();
   return FutureBuilder<bool>(
-    future: bind.isPresetPassword(),
+    future: _presetPasswordFuture,
     builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
-        return CircularProgressIndicator(); // Show a loading spinner while waiting for the Future to complete
+        // Use SizedBox.shrink() instead of CircularProgressIndicator()
+        // to avoid height changes that cause left panel flickering.
+        return SizedBox.shrink();
       } else if (snapshot.hasError) {
         return Text(
             'Error: ${snapshot.error}'); // Show an error message if the Future completed with an error

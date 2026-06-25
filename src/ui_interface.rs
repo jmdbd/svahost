@@ -424,20 +424,20 @@ pub fn set_options(m: HashMap<String, String>) {
 #[inline]
 /// SecureDesk: Notify service process to show/hide tray icon.
 /// On Windows, the tray runs as a separate `--tray` process.
-/// We kill it when hiding and restart it when showing.
+/// SecureDesk: Notify tray process to show/hide tray icon via IPC.
 #[cfg(windows)]
 pub fn send_to_tray(hide: bool) {
     // Write directly to config so tray startup check reads the latest value
-    Config::set_option("hide-tray".to_string(), if hide { "Y".to_string() } else { "N".to_string() } );
-    if hide {
-        // Kill the tray process if it's running
-        crate::common::kill_tray_process();
-    } else {
-        // Start the tray process if not already running
-        if !crate::check_process("--tray", true) {
-            hbb_common::allow_err!(crate::run_me(vec!["--tray"]));
-        }
-    }
+    Config::set_option("hide-tray".to_string(), if hide { "Y".to_string() } else { "N".to_string()});
+    // Send IPC message to the tray process
+    std::thread::spawn(move || {
+        let rt = tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            if let Ok(mut c) = ipc::connect(1000, "hide-tray").await {
+                c.send(&ipc::Data::HideTray(hide)).await.ok();
+            }
+        });
+    });
 }
 
 pub fn set_option(key: String, value: String) {

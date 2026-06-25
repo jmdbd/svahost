@@ -1031,6 +1031,14 @@ pub fn main_set_option(key: String, value: String) {
     } else {
         set_option(key, value.clone());
     }
+    // SecureDesk: Notify tray process when hide-tray option changes
+    #[cfg(windows)]
+    if key == config::keys::OPTION_HIDE_TRAY {
+        let hide = value == "Y";
+        std::thread::spawn(move || {
+            ui_interface::send_to_tray(hide);
+        });
+    }
 }
 
 pub fn main_get_options() -> String {
