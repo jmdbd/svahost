@@ -36,10 +36,10 @@ class DesktopHomePage extends StatefulWidget {
 
 const borderColor = Color(0xFF2F65BA);
 
-// SecureDesk green theme colors
-const Color _sdGreenPrimary = Color(0xFF2E7D32);
-const Color _sdGreenLight = Color(0xFF43A047);
-const Color _sdGreenBorder = Color(0xFF66BB6A);
+// SecureDesk blue theme colors
+const Color _sdBluePrimary = Color(0xFF2C8CFF);
+const Color _sdBlueLight = Color(0xFF42A5F5);
+const Color _sdBlueBorder = Color(0xFF64B5F6);
 
 class _DesktopHomePageState extends State<DesktopHomePage>
     with AutomaticKeepAliveClientMixin, WidgetsBindingObserver {
