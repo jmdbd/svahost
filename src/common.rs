@@ -1892,6 +1892,63 @@ pub async fn get_next_nonkeyexchange_msg(
     None
 }
 
+/// SecureDesk: Kill the tray process if it is running.
+/// On Windows, the tray runs as a separate `--tray` process.
+/// This is used by `send_to_tray` to dynamically show/hide the tray icon at runtime.
+#[cfg(not(any(target_os = "android", target_os = "ios")))]
+pub fn kill_tray_process() {
+    use hbb_common::sysinfo::System;
+    let mut sys = System::new();
+    sys.refresh_processes();
+    let mut path = std::env::current_exe().unwrap_or_default();
+    if let Ok(linked) = path.read_link() {
+        path = linked;
+    }
+    let path = path.to_string_lossy().to_lowercase();
+    let self_pid = std::process::id().to_string();
+    let mut tray_pids: Vec<String> = Vec::new();
+    for (_pid, p) in sys.processes().iter() {
+        let mut cur_path = p.exe().to_path_buf();
+        if let Ok(linked) = cur_path.read_link() {
+            cur_path = linked;
+        }
+        if cur_path.to_string_lossy().to_lowercase() != path {
+            continue;
+        }
+        if p.pid().to_string() == self_pid {
+            continue;
+        }
+        // Check if this process has the --tray argument
+        if p.cmd().len() <= 1 {
+            continue;
+        }
+        if p.cmd()[1] == "--tray" {
+            tray_pids.push(p.pid().to_string());
+        }
+    }
+    for pid in &tray_pids {
+        log::info!("Killing tray process PID: {}", pid);
+        #[cfg(target_os = "windows")]
+        {
+            use std::os::windows::process::CommandExt;
+            let _ = std::process::Command::new("taskkill")
+                .args(["/F", "/PID", pid])
+                .creation_flags(0x08000000) // CREATE_NO_WINDOW
+                .stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null())
+                .status();
+        }
+        #[cfg(not(target_os = "windows"))]
+        {
+            let _ = std::process::Command::new("kill")
+                .arg(pid)
+                .stdout(std::process::Stdio::null())
+                .stderr(std::process::Stdio::null())
+                .status();
+        }
+    }
+}
+
 #[cfg(all(target_os = "windows", not(target_pointer_width = "64")))]
 pub fn check_process(arg: &str, same_session_id: bool) -> bool {
     let mut path = std::env::current_exe().unwrap_or_default();
