@@ -3713,12 +3713,12 @@ Widget loadPowered(BuildContext context) {
     cursor: SystemMouseCursors.click,
     child: GestureDetector(
       onTap: () {
-        launchUrl(Uri.parse('https://vlanl.com'));
+        launchUrl(Uri.parse(''));
       },
       child: Opacity(
           opacity: 0.5,
           child: Text(
-            translate("powered_by_me"),
+            translate(""),
             overflow: TextOverflow.clip,
             style: Theme.of(context)
                 .textTheme
