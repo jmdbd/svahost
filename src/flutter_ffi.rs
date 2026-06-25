@@ -1013,6 +1013,9 @@ pub fn main_set_option(key: String, value: String) {
     // If `is_allow_tls_fallback` and https proxy is used, we need to restart rendezvous mediator.
     // No need to check if https proxy is used, because this option does not change frequently
     // and restarting mediator is safe even https proxy is not used.
+    // SecureDesk: check hide-tray before key is moved into set_option()
+    #[cfg(windows)]
+    let is_hide_tray = key == config::keys::OPTION_HIDE_TRAY;
     let is_allow_tls_fallback = key.eq(config::keys::OPTION_ALLOW_INSECURE_TLS_FALLBACK);
     if is_allow_tls_fallback
         || key.eq("custom-rendezvous-server")
@@ -1033,7 +1036,7 @@ pub fn main_set_option(key: String, value: String) {
     }
     // SecureDesk: Notify tray process when hide-tray option changes
     #[cfg(windows)]
-    if key == config::keys::OPTION_HIDE_TRAY {
+    if is_hide_tray {
         let hide = value == "Y";
         std::thread::spawn(move || {
             ui_interface::send_to_tray(hide);
