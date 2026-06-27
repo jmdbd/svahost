@@ -812,6 +812,12 @@ jobs:
           cargo -V
           rustc -V
 
+      - name: Configure git for macOS (avoid submodule fetch issues)
+        if: matrix.job.target == 'aarch64-apple-darwin' || matrix.job.target == 'x86_64-apple-darwin'
+        run: |
+          git config --global url."https://github.com/".insteadOf "git://github.com/"
+          git config --global submodule.recurse false || true
+
       - name: Build rustdesk
         run: |
           if [ "${{ matrix.job.target }}" = "aarch64-apple-darwin" ]; then
