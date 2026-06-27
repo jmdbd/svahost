@@ -940,7 +940,7 @@ pub fn is_modifier(evt: &KeyEvent) -> bool {
 }
 
 pub fn check_software_update() {
-    // SecureDesk: allow custom client to check updates
+    // svahost: allow custom client to check updates
     let opt = LocalConfig::get_option(keys::OPTION_ENABLE_CHECK_UPDATE);
     if config::option2bool(keys::OPTION_ENABLE_CHECK_UPDATE, &opt) {
         std::thread::spawn(move || allow_err!(do_check_software_update()));
@@ -1897,7 +1897,7 @@ pub async fn get_next_nonkeyexchange_msg(
     None
 }
 
-/// SecureDesk: Kill the tray process if it is running.
+/// svahost: Kill the tray process if it is running.
 /// On Windows, the tray runs as a separate `--tray` process.
 /// This is used by `send_to_tray` to dynamically show/hide the tray icon at runtime.
 #[cfg(not(any(target_os = "android", target_os = "ios")))]

@@ -124,7 +124,7 @@ class _ConnectionPageState extends State<ConnectionPage> {
         ? const SizedBox(height: 0)
         : InkWell(
             onTap: () async {
-              // SecureDesk: use server-returned URL dynamically
+              // svahost: use server-returned URL dynamically
               String downloadBase =
                   updateUrl.replaceAll('tag', 'download');
               String version = downloadBase

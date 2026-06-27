@@ -169,7 +169,7 @@ pub fn get_option<T: AsRef<str>>(key: T) -> String {
                 return v.to_owned();
             }
         }
-        // SecureDesk: Fall back to Config::get_option for defaults —
+        // svahost: Fall back to Config::get_option for defaults —
         // IPC-synced OPTIONS may miss keys stripped by purify_options.
         Config::get_option(key.as_ref())
     }
@@ -422,9 +422,9 @@ pub fn set_options(m: HashMap<String, String>) {
 }
 
 #[inline]
-/// SecureDesk: Notify service process to show/hide tray icon.
+/// svahost: Notify service process to show/hide tray icon.
 /// On Windows, the tray runs as a separate `--tray` process.
-/// SecureDesk: Notify tray process to show/hide tray icon via IPC.
+/// svahost: Notify tray process to show/hide tray icon via IPC.
 #[cfg(windows)]
 pub fn send_to_tray(hide: bool) {
     // Write directly to config so tray startup check reads the latest value

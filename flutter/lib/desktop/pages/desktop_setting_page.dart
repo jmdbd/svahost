@@ -2428,7 +2428,7 @@ class _AboutState extends State<_About> {
       final scrollController = ScrollController();
       return SingleChildScrollView(
         controller: scrollController,
-        child: _Card(title: translate('About SecureDesk'), children: [
+        child: _Card(title: translate('About svahost'), children: [
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -2655,14 +2655,14 @@ class _WaylandCardState extends State<WaylandCard> {
   final _clearShortcutsInhibitorFailedMsg = ''.obs;
   // Don't show the shortcuts permission reset button for now.
   // Users can change it manually:
-  //   "Settings" -> "Apps" -> "SecureDesk" -> "Permissions" -> "Inhibit Shortcuts".
+  //   "Settings" -> "Apps" -> "svahost" -> "Permissions" -> "Inhibit Shortcuts".
   // For resetting(clearing) the permission from the portal permission store, you can
-  // use (replace <desktop-id> with the SecureDesk desktop file ID):
+  // use (replace <desktop-id> with the svahost desktop file ID):
   //   busctl --user call org.freedesktop.impl.portal.PermissionStore \
   //   /org/freedesktop/impl/portal/PermissionStore org.freedesktop.impl.portal.PermissionStore \
   //   DeletePermission sss "gnome" "shortcuts-inhibitor" "<desktop-id>"
   // On a native install this is typically "rustdesk.desktop"; on Flatpak it is usually
-  // the exported desktop ID derived from the Flatpak app-id (e.g. "com.vlanl.securedesk.desktop").
+  // the exported desktop ID derived from the Flatpak app-id (e.g. "com.vlanl.svahost.desktop").
   //
   // We may add it back in the future if needed.
   final showResetInhibitorPermission = false;

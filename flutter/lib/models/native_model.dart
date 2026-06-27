@@ -118,17 +118,17 @@ class PlatformFFI {
   Future<void> init(String appType) async {
     _appType = appType;
     final dylib = isAndroid
-        ? DynamicLibrary.open('libsecuredesk.so')
+        ? DynamicLibrary.open('libsvahost.so')
         : isLinux
-            ? DynamicLibrary.open('libsecuredesk.so')
+            ? DynamicLibrary.open('libsvahost.so')
             : isWindows
-                ? DynamicLibrary.open('libsecuredesk.dll')
+                ? DynamicLibrary.open('libsvahost.dll')
                 :
                 // Use executable itself as the dynamic library for MacOS.
                 // Multiple dylib instances will cause some global instances to be invalid.
                 // eg. `lazy_static` objects in rust side, will be created more than once, which is not expected.
                 //
-                // isMacOS? DynamicLibrary.open("liblibsecuredesk.dylib") :
+                // isMacOS? DynamicLibrary.open("liblibsvahost.dylib") :
                 DynamicLibrary.process();
     debugPrint('initializing FFI $_appType');
     try {
@@ -239,10 +239,10 @@ class PlatformFFI {
   }
 
   /// Start listening to the Rust core's events and frames.
-  void _startListenEvent(SecuredeskImpl securedeskImpl) {
+  void _startListenEvent(SecuredeskImpl svahostImpl) {
     final appType =
         _appType == kAppTypeDesktopRemote ? '$_appType,$kWindowId' : _appType;
-    var sink = securedeskImpl.startGlobalEventStream(appType: appType);
+    var sink = svahostImpl.startGlobalEventStream(appType: appType);
     sink.listen((message) {
       () async {
         try {

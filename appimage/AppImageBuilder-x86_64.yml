@@ -7,19 +7,19 @@ script:
  - mkdir ./AppDir
  - mv ./usr ./AppDir/usr
  # 32x32 icon
- - for i in {32,64,128}; do mkdir -p ./AppDir/usr/share/icons/hicolor/$i\x$i/apps/; cp ../res/$i\x$i.png ./AppDir/usr/share/icons/hicolor/$i\x$i/apps/securedesk.png; done
- - mkdir -p ./AppDir/usr/share/icons/hicolor/scalable/apps/; cp ../res/scalable.svg ./AppDir/usr/share/icons/hicolor/scalable/apps/securedesk.svg
+ - for i in {32,64,128}; do mkdir -p ./AppDir/usr/share/icons/hicolor/$i\x$i/apps/; cp ../res/$i\x$i.png ./AppDir/usr/share/icons/hicolor/$i\x$i/apps/svahost.png; done
+ - mkdir -p ./AppDir/usr/share/icons/hicolor/scalable/apps/; cp ../res/scalable.svg ./AppDir/usr/share/icons/hicolor/scalable/apps/svahost.svg
  # desktop file
- # - sed -i "s/Icon=\/usr\/share\/rustdesk\/files\/rustdesk.png/Icon=securedesk/g" ./AppDir/usr/share/applications/securedesk.desktop
+ # - sed -i "s/Icon=\/usr\/share\/rustdesk\/files\/rustdesk.png/Icon=svahost/g" ./AppDir/usr/share/applications/svahost.desktop
  - rm -rf ./AppDir/usr/share/applications
 AppDir:
   path: ./AppDir
   app_info:
-    id: securedesk
-    name: SecureDesk
-    icon: securedesk
+    id: svahost
+    name: svahost
+    icon: svahost
     version: 1.4.8
-    exec: usr/share/rustdesk/securedesk
+    exec: usr/share/rustdesk/svahost
     exec_args: $@
   apt:
     arch:

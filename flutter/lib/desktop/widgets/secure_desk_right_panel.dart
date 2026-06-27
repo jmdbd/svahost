@@ -1,4 +1,4 @@
-// SecureDesk right panel — compact banner with night landscape
+// svahost right panel — compact banner with night landscape
 // Style: blue-toned night scene with jagged mountains, full moon, stars,
 //        pine trees with visible trunks
 
@@ -7,14 +7,14 @@ import 'package:flutter_hbb/common.dart';
 import 'package:flutter_hbb/common/widgets/peer_tab_page.dart';
 import 'package:flutter_hbb/desktop/pages/desktop_tab_page.dart';
 
-class SecureDeskRightPanel extends StatefulWidget {
-  const SecureDeskRightPanel({Key? key}) : super(key: key);
+class svahostRightPanel extends StatefulWidget {
+  const svahostRightPanel({Key? key}) : super(key: key);
 
   @override
-  State<SecureDeskRightPanel> createState() => _SecureDeskRightPanelState();
+  State<svahostRightPanel> createState() => _svahostRightPanelState();
 }
 
-class _SecureDeskRightPanelState extends State<SecureDeskRightPanel>
+class _svahostRightPanelState extends State<svahostRightPanel>
     with SingleTickerProviderStateMixin {
   late final AnimationController _glowController;
 

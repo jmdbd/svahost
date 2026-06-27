@@ -3,7 +3,7 @@
     windows_subsystem = "windows"
 )]
 
-use libsecuredesk::*;
+use libsvahost::*;
 
 #[cfg(any(target_os = "android", target_os = "ios", feature = "flutter"))]
 fn main() {
@@ -46,10 +46,10 @@ fn main() {
         -k, --key=[KEY] ''
        -s, --server=[] 'Start server'",
     );
-    let matches = App::new("securedesk")
+    let matches = App::new("svahost")
         .version(crate::VERSION)
         .author("vlanl<info@vlanl.com>")
-        .about("SecureDesk command line tool")
+        .about("svahost command line tool")
         .args_from_usage(&args)
         .get_matches();
     use hbb_common::{config::LocalConfig, env_logger::*};

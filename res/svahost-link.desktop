@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=svahost
+NoDisplay=true
+MimeType=x-scheme-handler/svahost;
+TryExec=svahost
+Exec=svahost %u
+Icon=svahost
+Terminal=false
+Type=Application
+StartupNotify=false
+StartupWMClass=svahost

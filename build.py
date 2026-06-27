@@ -341,15 +341,15 @@ def build_flutter_deb(version, features):
     system2(
         'cp ../res/scalable.svg tmpdeb/usr/share/icons/hicolor/scalable/apps/rustdesk.svg')
     system2(
-        'cp ../res/securedesk.desktop tmpdeb/usr/share/applications/rustdesk.desktop')
+        'cp ../res/svahost.desktop tmpdeb/usr/share/applications/rustdesk.desktop')
     system2(
-        'cp ../res/securedesk-link.desktop tmpdeb/usr/share/applications/rustdesk-link.desktop')
+        'cp ../res/svahost-link.desktop tmpdeb/usr/share/applications/rustdesk-link.desktop')
     system2(
         'cp ../res/startwm.sh tmpdeb/etc/rustdesk/')
     system2(
         'cp ../res/xorg.conf tmpdeb/etc/rustdesk/')
     system2(
-        'cp ../res/pam.d/securedesk.debian tmpdeb/etc/pam.d/rustdesk')
+        'cp ../res/pam.d/svahost.debian tmpdeb/etc/pam.d/rustdesk')
     system2(
         "echo \"#!/bin/sh\" >> tmpdeb/usr/share/rustdesk/files/polkit && chmod a+x tmpdeb/usr/share/rustdesk/files/polkit")
 
@@ -384,9 +384,9 @@ def build_deb_from_folder(version, binary_folder):
     system2(
         'cp ../res/scalable.svg tmpdeb/usr/share/icons/hicolor/scalable/apps/rustdesk.svg')
     system2(
-        'cp ../res/securedesk.desktop tmpdeb/usr/share/applications/rustdesk.desktop')
+        'cp ../res/svahost.desktop tmpdeb/usr/share/applications/rustdesk.desktop')
     system2(
-        'cp ../res/securedesk-link.desktop tmpdeb/usr/share/applications/rustdesk-link.desktop')
+        'cp ../res/svahost-link.desktop tmpdeb/usr/share/applications/rustdesk-link.desktop')
     system2(
         "echo \"#!/bin/sh\" >> tmpdeb/usr/share/rustdesk/files/polkit && chmod a+x tmpdeb/usr/share/rustdesk/files/polkit")
 
@@ -409,7 +409,7 @@ def build_flutter_dmg(version, features):
             f'MACOSX_DEPLOYMENT_TARGET=10.14 cargo build --locked --features {features} --release')
     # copy dylib
     system2(
-        "cp target/release/liblibsecuredesk.dylib target/release/libsecuredesk.dylib")
+        "cp target/release/liblibsvahost.dylib target/release/libsvahost.dylib")
     os.chdir('flutter')
     # cargo builds a single-arch dylib for the host; restrict Xcode to the same arch
     # so the universal-by-default ARCHS_STANDARD doesn't try to link a missing slice.
@@ -432,7 +432,7 @@ def build_flutter_arch_manjaro(version, features):
     ffi_bindgen_function_refactor()
     os.chdir('flutter')
     system2('flutter build linux --release')
-    system2(f'strip {flutter_build_dir}/lib/libsecuredesk.so')
+    system2(f'strip {flutter_build_dir}/lib/libsvahost.so')
     os.chdir('../res')
     system2('HBB=`pwd`/.. FLUTTER=1 makepkg -f')
 
@@ -440,7 +440,7 @@ def build_flutter_arch_manjaro(version, features):
 def build_flutter_windows(version, features, skip_portable_pack):
     if not skip_cargo:
         system2(f'cargo build --locked --features {features} --lib --release')
-        if not os.path.exists("target/release/libsecuredesk.dll"):
+        if not os.path.exists("target/release/libsvahost.dll"):
             print("cargo build failed, please check rust source code.")
             exit(-1)
     os.chdir('flutter')
@@ -453,19 +453,19 @@ def build_flutter_windows(version, features, skip_portable_pack):
     os.chdir('libs/portable')
     system2('pip3 install -r requirements.txt')
     system2(
-        f'python3 ./generate.py -f ../../{flutter_build_dir_2} -o . -e ../../{flutter_build_dir_2}/securedesk.exe')
+        f'python3 ./generate.py -f ../../{flutter_build_dir_2} -o . -e ../../{flutter_build_dir_2}/svahost.exe')
     os.chdir('../..')
-    if os.path.exists('./securedesk_portable.exe'):
-        os.replace('./target/release/securedesk-portable-packer.exe',
-                   './securedesk_portable.exe')
+    if os.path.exists('./svahost_portable.exe'):
+        os.replace('./target/release/svahost-portable-packer.exe',
+                   './svahost_portable.exe')
     else:
-        os.rename('./target/release/securedesk-portable-packer.exe',
-                  './securedesk_portable.exe')
+        os.rename('./target/release/svahost-portable-packer.exe',
+                  './svahost_portable.exe')
     print(
-        f'output location: {os.path.abspath(os.curdir)}/securedesk_portable.exe')
-    os.rename('./securedesk_portable.exe', f'./securedesk-{version}-install.exe')
+        f'output location: {os.path.abspath(os.curdir)}/svahost_portable.exe')
+    os.rename('./svahost_portable.exe', f'./svahost-{version}-install.exe')
     print(
-        f'output location: {os.path.abspath(os.curdir)}/securedesk-{version}-install.exe')
+        f'output location: {os.path.abspath(os.curdir)}/svahost-{version}-install.exe')
 
 
 def main():
@@ -503,7 +503,7 @@ def main():
             return
         system2('cargo build --locked --release --features ' + features)
         # system2('upx.exe target/release/rustdesk.exe')
-        system2('mv target/release/securedesk.exe target/release/RustDesk.exe')
+        system2('mv target/release/svahost.exe target/release/RustDesk.exe')
         pa = os.environ.get('P')
         if pa:
             # https://certera.com/kb/tutorial-guide-for-safenet-authentication-client-for-code-signing/
@@ -518,8 +518,8 @@ def main():
         os.chdir('libs/portable')
         system2('pip3 install -r requirements.txt')
         system2(
-            f'python3 ./generate.py -f ../../{res_dir} -o . -e ../../{res_dir}/securedesk-{version}-win7-install.exe')
-        system2(f'mv ../../{res_dir}/securedesk-{version}-win7-install.exe ../..')
+            f'python3 ./generate.py -f ../../{res_dir} -o . -e ../../{res_dir}/svahost-{version}-win7-install.exe')
+        system2(f'mv ../../{res_dir}/svahost-{version}-win7-install.exe ../..')
     elif os.path.isfile('/usr/bin/pacman'):
         # pacman -S -needed base-devel
         system2("sed -i 's/pkgver=.*/pkgver=%s/g' res/PKGBUILD" % version)
@@ -619,16 +619,16 @@ def main():
                 system2(
                     'cp res/scalable.svg tmpdeb/usr/share/icons/hicolor/scalable/apps/rustdesk.svg')
                 system2(
-                    'cp res/securedesk.desktop tmpdeb/usr/share/applications/rustdesk.desktop')
+                    'cp res/svahost.desktop tmpdeb/usr/share/applications/rustdesk.desktop')
                 system2(
-                    'cp res/securedesk-link.desktop tmpdeb/usr/share/applications/rustdesk-link.desktop')
+                    'cp res/svahost-link.desktop tmpdeb/usr/share/applications/rustdesk-link.desktop')
                 os.system('mkdir -p tmpdeb/etc/rustdesk/')
                 os.system('cp -a res/startwm.sh tmpdeb/etc/rustdesk/')
                 os.system('mkdir -p tmpdeb/etc/X11/rustdesk/')
                 os.system('cp res/xorg.conf tmpdeb/etc/X11/rustdesk/')
                 os.system('cp -a DEBIAN/* tmpdeb/DEBIAN/')
                 os.system('mkdir -p tmpdeb/etc/pam.d/')
-                os.system('cp pam.d/securedesk.debian tmpdeb/etc/pam.d/rustdesk')
+                os.system('cp pam.d/svahost.debian tmpdeb/etc/pam.d/rustdesk')
                 system2('strip tmpdeb/usr/bin/rustdesk')
                 system2('mkdir -p tmpdeb/usr/share/rustdesk')
                 system2('mv tmpdeb/usr/bin/rustdesk tmpdeb/usr/share/rustdesk/')

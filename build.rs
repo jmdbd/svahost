@@ -78,8 +78,8 @@ fn install_android_deps() {
 }
 
 fn main() {
-    // SecureDesk: compile-time brand & server injection (must be before gen_version)
-    std::env::set_var("APP_NAME", "SecureDesk");
+    // svahost: compile-time brand & server injection (must be before gen_version)
+    std::env::set_var("APP_NAME", "svahost");
     std::env::set_var("RENDEZVOUS_SERVER", "rs-ny.vlanl.com");
     std::env::set_var("RELAY_SERVER", "rs-ny.vlanl.com");
 

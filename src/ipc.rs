@@ -360,7 +360,7 @@ pub enum Data {
     Theme(String),
     Language(String),
     Empty,
-    /// SecureDesk: hide/show tray icon
+    /// svahost: hide/show tray icon
     #[cfg(windows)]
     HideTray(bool),
     Disconnected,
