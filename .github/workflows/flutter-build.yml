@@ -1651,7 +1651,7 @@ jobs:
             export CARGO_INCREMENTAL=0
             export DEB_ARCH=${{ matrix.job.deb_arch }}
             python3 ./build.py --flutter --skip-cargo
-            for name in rustdesk*??.deb; do
+            for name in svahost*??.deb; do
               mv "$name" "svahost-${{ env.VERSION }}-${{ matrix.job.arch }}.deb"
             done
 
@@ -1926,7 +1926,7 @@ jobs:
             cargo build --features inline${{ matrix.job.extra_features }} --release --bins --jobs 1
             # make debian package
             mkdir -p ./Release
-            mv ./target/release/svahost ./Release/rustdesk
+            mv ./target/release/svahost ./Release/svahost
             wget -O ./Release/libsciter-gtk.so https://github.com/c-smile/sciter-sdk/raw/master/bin.lnx/${{ matrix.job.sciter_arch }}/libsciter-gtk.so
             export DEB_ARCH=${{ matrix.job.deb_arch }}
             ./build.py --package ./Release
@@ -1934,7 +1934,7 @@ jobs:
       - name: Rename rustdesk
         shell: bash
         run: |
-          for name in rustdesk*??.deb; do
+          for name in svahost*??.deb; do
               # use cp to duplicate deb files to fit other packages.
               cp "$name" "svahost-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.deb"
           done
@@ -2081,7 +2081,7 @@ jobs:
             pushd flatpak
             git clone https://github.com/flathub/shared-modules.git --depth=1
             flatpak-builder --user --install-deps-from=flathub -y --force-clean --repo=repo ./build ./rustdesk.json
-            flatpak build-bundle ./repo svahost-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak com.rustdesk.Svahost
+            flatpak build-bundle ./repo svahost-${{ env.VERSION }}-${{ matrix.job.arch }}${{ matrix.job.suffix }}.flatpak com.vlanl.svahost
 
       - name: Publish flatpak package
         uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v1
