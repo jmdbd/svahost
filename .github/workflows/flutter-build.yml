@@ -1671,8 +1671,8 @@ jobs:
             esac
             HBB=`pwd` rpmbuild ./res/rpm-flutter.spec -bb
             pushd ~/rpmbuild/RPMS/${{ matrix.job.arch }}
-            for name in rustdesk*??.rpm; do
-                mv "$name" /workspace/"svahost-${name#rustdesk-}"
+            for name in svahost*??.rpm; do
+                mv "$name" /workspace/"${name}"
             done
 
             # rpm suse package
@@ -1685,8 +1685,8 @@ jobs:
             esac
             HBB=`pwd` rpmbuild ./res/rpm-flutter-suse.spec -bb
             pushd ~/rpmbuild/RPMS/${{ matrix.job.arch }}
-            for name in rustdesk*??.rpm; do
-                mv "$name" /workspace/"svahost-${name#rustdesk-}"
+            for name in svahost*??.rpm; do
+                mv "$name" /workspace/"${name}"
             done
 
       - name: Publish debian/rpm package
