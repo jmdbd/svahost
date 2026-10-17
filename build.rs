@@ -43,6 +43,15 @@ fn build_manifest() {
     }
 }
 
+// bionic only exports getifaddrs()/freeifaddrs() from API 24, while the jniLibs
+// are built against the API 21 sysroot (flutter/ndk_*.sh). webrtc-util calls
+// them, so without this the android link fails on undefined symbols.
+fn build_android_ifaddrs() {
+    let file = "src/platform/android_ifaddrs.c";
+    cc::Build::new().file(file).compile("android_ifaddrs");
+    println!("cargo:rerun-if-changed={}", file);
+}
+
 fn install_android_deps() {
     let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
     if target_os != "android" {
@@ -72,17 +81,25 @@ fn install_android_deps() {
         path.join("lib").to_str().unwrap()
     );
     println!("cargo:rustc-link-lib=ndk_compat");
-    println!("cargo:rustc-link-lib=oboe");
     println!("cargo:rustc-link-lib=c++");
     println!("cargo:rustc-link-lib=OpenSLES");
 }
 
-fn main() {
-    // svahost: compile-time brand & server injection (must be before gen_version)
-    std::env::set_var("APP_NAME", "svahost");
-    std::env::set_var("RENDEZVOUS_SERVER", "rs-ny.vlanl.com");
-    std::env::set_var("RELAY_SERVER", "rs-ny.vlanl.com");
+/// 若环境变量（Repository secrets）未提供，则写入 svahost 默认值。
+/// 必须在 hbb_common::gen_version() 之前调用。
+fn set_default_env(key: &str, val: &str) {
+    match std::env::var_os(key) {
+        Some(v) if !v.is_empty() => {}
+        _ => std::env::set_var(key, val),
+    }
+}
 
+fn main() {
+    // svahost: 编译期品牌与服务器默认值注入（Repository secrets 优先）
+    set_default_env("APP_NAME", "svahost");
+    set_default_env("RENDEZVOUS_SERVER", "rs-ny.vlanl.com");
+    set_default_env("RELAY_SERVER", "rs-ny.vlanl.com");
+    set_default_env("API_SERVER", "rs-ny.vlanl.com");
     hbb_common::gen_version();
     install_android_deps();
     #[cfg(all(windows, feature = "inline"))]
@@ -94,6 +111,9 @@ fn main() {
         #[cfg(target_os = "macos")]
         build_mac();
         println!("cargo:rustc-link-lib=framework=ApplicationServices");
+    }
+    if target_os == "android" {
+        build_android_ifaddrs();
     }
     println!("cargo:rerun-if-changed=build.rs");
 }

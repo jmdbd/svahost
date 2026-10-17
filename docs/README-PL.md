@@ -11,11 +11,11 @@
 
 Porozmawiaj z nami na: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Zaawansowane%20Funkcje-blue)](https://vlanl.com/pricing.html)
+[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Zaawansowane%20Funkcje-blue)](https://rustdesk.com/pricing.html)
 
 ## O projekcie
 
-RustDesk to wieloplatformowe oprogramowanie do zdalnego pulpitu, napisane w języku Rust, zaprojektowane z myślą o prostocie wdrożenia, bezpieczeństwie i pełnej kontroli użytkownika nad danymi. Aplikacja działa od razu po uruchomieniu i nie wymaga skomplikowanej konfiguracji. Możesz skorzystać z naszego darmowego serwera publicznego, [skonfigurować własny](https://vlanl.com/server), lub [napisać własny serwer](https://github.com/rustdesk/rustdesk-server-demo).
+RustDesk to wieloplatformowe oprogramowanie do zdalnego pulpitu, napisane w języku Rust, zaprojektowane z myślą o prostocie wdrożenia, bezpieczeństwie i pełnej kontroli użytkownika nad danymi. Aplikacja działa od razu po uruchomieniu i nie wymaga skomplikowanej konfiguracji. Możesz skorzystać z naszego darmowego serwera publicznego, [skonfigurować własny](https://rustdesk.com/server), lub [napisać własny serwer](https://github.com/rustdesk/rustdesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png) 
 
@@ -155,7 +155,6 @@ Upewnij się, że uruchamiasz te polecenia z katalogu głównego repozytorium Ru
 - **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: Komunikacja z [rustdesk-server](https://github.com/rustdesk/rustdesk-server), czekanie na bezpośrednie (odpytywanie TCP) lub przekazywane połączenie
 - **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: kod specyficzny dla danej platformy
 - **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: kod Flutter dla urządzeń mobilnych
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/js)**: JavaScript dla Flutter - klient web
 
 ## Zrzuty ekranu
 

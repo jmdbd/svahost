@@ -12,7 +12,7 @@ use hbb_common::{
     log,
 };
 
-#[cfg(not(any(feature = "flutter", feature = "cli")))]
+#[cfg(not(feature = "flutter"))]
 use crate::ui_session_interface::Session;
 use crate::{common::get_app_name, ipc, ui_interface::*};
 
@@ -29,7 +29,7 @@ lazy_static::lazy_static! {
     static ref STUPID_VALUES: Mutex<Vec<Arc<Vec<Value>>>> = Default::default();
 }
 
-#[cfg(not(any(feature = "flutter", feature = "cli")))]
+#[cfg(not(feature = "flutter"))]
 lazy_static::lazy_static! {
     pub static ref CUR_SESSION: Arc<Mutex<Option<Session<remote::SciterHandler>>>> = Default::default();
 }
@@ -151,7 +151,7 @@ pub fn start(args: &mut [String]) {
         frame.register_behavior("native-remote", move || {
             let handler =
                 remote::SciterSession::new(cmd.clone(), id.clone(), pass.clone(), args.clone());
-            #[cfg(not(any(feature = "flutter", feature = "cli")))]
+            #[cfg(not(feature = "flutter"))]
             {
                 *CUR_SESSION.lock().unwrap() = Some(handler.inner());
             }
@@ -717,6 +717,19 @@ impl UI {
         }
         .to_string()
     }
+
+    // PIN 锁定功能: 获取已保存的 PIN 码
+    fn get_unlock_pin(&self) -> String {
+        ipc::get_unlock_pin()
+    }
+
+    // PIN 锁定功能: 设置 PIN 码 (空字符串表示删除 PIN)，返回空串表示成功
+    fn set_unlock_pin(&self, pin: String) -> String {
+        match ipc::set_unlock_pin(pin, true) {
+            Ok(_) => String::new(),
+            Err(e) => e.to_string(),
+        }
+    }
 }
 
 impl sciter::EventHandler for UI {
@@ -822,6 +835,8 @@ impl sciter::EventHandler for UI {
         fn is_option_fixed(String);
         fn get_builtin_option(String);
         fn is_remote_modify_enabled_by_control_permissions();
+        fn get_unlock_pin();
+        fn set_unlock_pin(String);
     }
 }
 

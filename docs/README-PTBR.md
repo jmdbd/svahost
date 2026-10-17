@@ -5,7 +5,7 @@
   <a href="#estrutura-de-arquivos">Estrutura</a> •
   <a href="#capturas-de-tela">Capturas de Tela</a><br>
   [<a href="../README.md">Inglês</a>] | [<a href="docs/README-UA.md">Ucraniano</a>] | [<a href="docs/README-CS.md">Tcheco</a>] | [<a href="docs/README-ZH.md">Chinês</a>] | [<a href="docs/README-HU.md">Húngaro</a>] | [<a href="docs/README-ES.md">Espanhol</a>] | [<a href="docs/README-FA.md">Persa</a>] | [<a href="docs/README-FR.md">Francês</a>] | [<a href="docs/README-DE.md">Alemão</a>] | [<a href="docs/README-PL.md">Polonês</a>] | [<a href="docs/README-ID.md">Indonésio</a>] | [<a href="docs/README-FI.md">Finlandês</a>] | [<a href="docs/README-ML.md">Malaiala</a>] | [<a href="docs/README-JP.md">Japonês</a>] | [<a href="docs/README-NL.md">Holandês</a>] | [<a href="docs/README-IT.md">Italiano</a>] | [<a href="docs/README-RU.md">Russo</a>] | [<a href="docs/README-EO.md">Esperanto</a>] | [<a href="docs/README-KR.md">Coreano</a>] | [<a href="docs/README-AR.md">Árabe</a>] | [<a href="docs/README-VN.md">Vietnamita</a>] | [<a href="docs/README-DA.md">Dinamarquês</a>] | [<a href="docs/README-GR.md">Grego</a>] | [<a href="docs/README-TR.md">Turco</a>] | [<a href="docs/README-NO.md">Norueguês</a>] | [<a href="docs/README-RO.md">Romeno</a>]<br>
-  <b>Precisamos da sua ajuda para traduzir este README, a <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">Interface do RustDesk</a> e a <a href="https://github.com/rustdesk/doc.vlanl.com">Documentação do RustDesk</a> para o seu idioma nativo</b>
+  <b>Precisamos da sua ajuda para traduzir este README, a <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">Interface do RustDesk</a> e a <a href="https://github.com/rustdesk/doc.rustdesk.com">Documentação do RustDesk</a> para o seu idioma nativo</b>
 </p>
 
 > [!Caution]
@@ -15,9 +15,9 @@
 
 Converse conosco: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Advanced%20Features-blue)](https://vlanl.com/pricing.html)
+[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Advanced%20Features-blue)](https://rustdesk.com/pricing.html)
 
-Mais uma solução de desktop remoto, escrita em Rust. Funciona imediatamente, sem necessidade de configuração. Você tem controle total dos seus dados, sem preocupações com segurança. Você pode usar nosso servidor de conexão/retransmissão (rendezvous/relay), [configurar o seu próprio](https://vlanl.com/server) ou [escrever seu próprio servidor de conexão/retransmissão](https://github.com/rustdesk/rustdesk-server-demo).
+Mais uma solução de desktop remoto, escrita em Rust. Funciona imediatamente, sem necessidade de configuração. Você tem controle total dos seus dados, sem preocupações com segurança. Você pode usar nosso servidor de conexão/retransmissão (rendezvous/relay), [configurar o seu próprio](https://rustdesk.com/server) ou [escrever seu próprio servidor de conexão/retransmissão](https://github.com/rustdesk/rustdesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
@@ -57,26 +57,26 @@ Por favor, faça o download da biblioteca dinâmica do Sciter por conta própria
 
 - Execute `cargo run`
 
-## [Compilar](https://vlanl.com/docs/en/dev/build/)
+## [Compilar](https://rustdesk.com/docs/en/dev/build/)
 
 ## Como Compilar no Linux
 
 ### Ubuntu 18 (Debian 10)
 
 ```sh
-sudo apt install -y zip g++ gcc git curl wget nasm yasm libgtk-3-dev clang libxcb-randr0-dev libxdo-dev         libxfixes-dev libxcb-shape0-dev libxcb-xfixes0-dev libasound2-dev libpulse-dev cmake make         libclang-dev ninja-build libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpam0g-dev
+sudo apt install -y zip g++ gcc git curl wget nasm yasm libgtk-3-dev clang libxcb-randr0-dev libxdo-dev         libxfixes-dev libxcb-shape0-dev libxcb-xfixes0-dev libasound2-dev libpulse-dev cmake make         libclang-dev ninja-build libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 ```
 
 ### openSUSE Tumbleweed
 
 ```sh
-sudo zypper install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libXfixes-devel cmake alsa-lib-devel gstreamer-devel gstreamer-plugins-base-devel xdotool-devel pam-devel
+sudo zypper install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libXfixes-devel cmake alsa-lib-devel gstreamer-devel gstreamer-plugins-base-devel xdotool-devel
 ```
 
 ### Fedora 28 (CentOS 8)
 
 ```sh
-sudo yum -y install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel cmake alsa-lib-devel gstreamer1-devel gstreamer1-plugins-base-devel pam-devel
+sudo yum -y install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel cmake alsa-lib-devel gstreamer1-devel gstreamer1-plugins-base-devel
 ```
 
 ### Arch (Manjaro)
@@ -166,7 +166,6 @@ Certifique-se de executar esses comandos a partir da raiz do repositório do Rus
 - **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: Comunica-se com o [rustdesk-server](https://github.com/rustdesk/rustdesk-server), aguarda por conexão remota direta (perfuração de túnel TCP / hole punching) ou retransmitida.
 - **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: código específico de cada plataforma.
 - **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: código Flutter para desktop e dispositivos móveis.
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/v1/js)**: JavaScript para o cliente web do Flutter.
 
 ## Capturas de Tela
 

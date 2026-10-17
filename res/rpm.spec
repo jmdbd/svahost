@@ -1,11 +1,11 @@
-Name:       svahost
-Version:    1.4.8
+Name:       rustdesk
+Version:    1.5.0
 Release:    0
 Summary:    RPM package
 License:    GPL-3.0
-URL:        https://vlanl.com
-Vendor:     svahost <info@vlanl.com>
-Requires:   gtk3 libxcb libXfixes alsa-lib libva2 pam gstreamer1-plugins-base
+URL:        https://rustdesk.com
+Vendor:     rustdesk <info@rustdesk.com>
+Requires:   gtk3 libxcb libXfixes alsa-lib libva2 gstreamer1-plugins-base
 Recommends: libayatana-appindicator-gtk3 libxdo
 
 # https://docs.fedoraproject.org/en-US/packaging-guidelines/Scriptlets/
@@ -23,27 +23,27 @@ The best open-source remote desktop client software, written in Rust.
 
 %install
 mkdir -p %{buildroot}/usr/bin/
-mkdir -p %{buildroot}/usr/share/svahost/
-mkdir -p %{buildroot}/usr/share/svahost/files/
+mkdir -p %{buildroot}/usr/share/rustdesk/
+mkdir -p %{buildroot}/usr/share/rustdesk/files/
 mkdir -p %{buildroot}/usr/share/icons/hicolor/256x256/apps/
 mkdir -p %{buildroot}/usr/share/icons/hicolor/scalable/apps/
-install -m 755 $HBB/target/release/rustdesk %{buildroot}/usr/bin/svahost
-install $HBB/libsciter-gtk.so %{buildroot}/usr/share/svahost/libsciter-gtk.so
-install $HBB/res/svahost.service %{buildroot}/usr/share/svahost/files/
-install $HBB/res/128x128@2x.png %{buildroot}/usr/share/icons/hicolor/256x256/apps/svahost.png
-install $HBB/res/scalable.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/svahost.svg
-install $HBB/res/svahost.desktop %{buildroot}/usr/share/svahost/files/
-install $HBB/res/svahost-link.desktop %{buildroot}/usr/share/svahost/files/
+install -m 755 $HBB/target/release/rustdesk %{buildroot}/usr/bin/rustdesk
+install $HBB/libsciter-gtk.so %{buildroot}/usr/share/rustdesk/libsciter-gtk.so
+install $HBB/res/rustdesk.service %{buildroot}/usr/share/rustdesk/files/
+install $HBB/res/128x128@2x.png %{buildroot}/usr/share/icons/hicolor/256x256/apps/rustdesk.png
+install $HBB/res/scalable.svg %{buildroot}/usr/share/icons/hicolor/scalable/apps/rustdesk.svg
+install $HBB/res/rustdesk.desktop %{buildroot}/usr/share/rustdesk/files/
+install $HBB/res/rustdesk-link.desktop %{buildroot}/usr/share/rustdesk/files/
 
 %files
-/usr/bin/svahost
-/usr/share/svahost/libsciter-gtk.so
-/usr/share/svahost/files/svahost.service
-/usr/share/icons/hicolor/256x256/apps/svahost.png
-/usr/share/icons/hicolor/scalable/apps/svahost.svg
-/usr/share/svahost/files/svahost.desktop
-/usr/share/svahost/files/svahost-link.desktop
-/usr/share/svahost/files/__pycache__/*
+/usr/bin/rustdesk
+/usr/share/rustdesk/libsciter-gtk.so
+/usr/share/rustdesk/files/rustdesk.service
+/usr/share/icons/hicolor/256x256/apps/rustdesk.png
+/usr/share/icons/hicolor/scalable/apps/rustdesk.svg
+/usr/share/rustdesk/files/rustdesk.desktop
+/usr/share/rustdesk/files/rustdesk-link.desktop
+/usr/share/rustdesk/files/__pycache__/*
 
 %changelog
 # let's skip this for now
@@ -56,26 +56,26 @@ case "$1" in
   ;;
   2)
     # for upgrade
-    systemctl stop svahost || true
+    systemctl stop rustdesk || true
   ;;
 esac
 
 %post
-cp /usr/share/svahost/files/svahost.service /etc/systemd/system/svahost.service
-cp /usr/share/svahost/files/svahost.desktop /usr/share/applications/
-cp /usr/share/svahost/files/svahost-link.desktop /usr/share/applications/
+cp /usr/share/rustdesk/files/rustdesk.service /etc/systemd/system/rustdesk.service
+cp /usr/share/rustdesk/files/rustdesk.desktop /usr/share/applications/
+cp /usr/share/rustdesk/files/rustdesk-link.desktop /usr/share/applications/
 systemctl daemon-reload
-systemctl enable svahost
-systemctl start svahost
+systemctl enable rustdesk
+systemctl start rustdesk
 update-desktop-database
 
 %preun
 case "$1" in
   0)
     # for uninstall
-    systemctl stop svahost || true
-    systemctl disable svahost || true
-    rm /etc/systemd/system/svahost.service || true
+    systemctl stop rustdesk || true
+    systemctl disable rustdesk || true
+    rm /etc/systemd/system/rustdesk.service || true
   ;;
   1)
     # for upgrade
@@ -86,8 +86,8 @@ esac
 case "$1" in
   0)
     # for uninstall
-    rm /usr/share/applications/svahost.desktop || true
-    rm /usr/share/applications/svahost-link.desktop || true
+    rm /usr/share/applications/rustdesk.desktop || true
+    rm /usr/share/applications/rustdesk-link.desktop || true
     update-desktop-database
   ;;
   1)

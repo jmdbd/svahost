@@ -11,11 +11,11 @@
 
 Chatta con noi su: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Funzionalit%C3%A0%20Avanzate-blue)](https://vlanl.com/pricing.html)
+[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-Funzionalit%C3%A0%20Avanzate-blue)](https://rustdesk.com/pricing.html)
 
 [![Bounties aperti](https://img.shields.io/endpoint?url=https%3A%2F%2Fconsole.algora.io%2Fapi%2Fshields%2Frustdesk%2Fbounties%3Fstatus%3Dopen)](https://console.algora.io/org/rustdesk/bounties?status=open)
 
-Ancora un altro software per il controllo remoto del desktop, scritto in Rust. Funziona immediatamente, nessuna configurazione richiesta. Hai il pieno controllo dei tuoi dati, senza preoccupazioni per la sicurezza. Puoi usare il nostro server rendezvous/relay, [configurare il tuo server](https://vlanl.com/server) o [realizzare il tuo server rendezvous/relay](https://github.com/rustdesk/rustdesk-server-demo).
+Ancora un altro software per il controllo remoto del desktop, scritto in Rust. Funziona immediatamente, nessuna configurazione richiesta. Hai il pieno controllo dei tuoi dati, senza preoccupazioni per la sicurezza. Puoi usare il nostro server rendezvous/relay, [configurare il tuo server](https://rustdesk.com/server) o [realizzare il tuo server rendezvous/relay](https://github.com/rustdesk/rustdesk-server-demo).
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
@@ -52,7 +52,7 @@ Scarica la libreria dinamica Sciter.
 
 - Esegui `cargo run`
 
-## [Build](https://vlanl.com/docs/en/dev/build/)
+## [Build](https://rustdesk.com/docs/en/dev/build/)
 
 ## Come compilare in Linux
 
@@ -162,7 +162,6 @@ Assicurati di eseguire questi comandi dalla radice del repository RustDesk, altr
 - **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: comunica con [rustdesk-server](https://github.com/rustdesk/rustdesk-server), attende la connessione remota diretta (TCP hole punching) oppure indiretta (relayed)
 - **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: codice specifico della piattaforma
 - **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: codice Flutter per desktop e mobile
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/js)**: JavaScript per client web Flutter
 
 > [!Attenzione]
 > **Dichiarazione di non responsabilità per uso improprio:** <br>

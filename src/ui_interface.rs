@@ -1,9 +1,10 @@
+use base::config::keys::{self, *};
 #[cfg(any(target_os = "android", target_os = "ios"))]
 use hbb_common::password_security;
 use hbb_common::{
     allow_err,
     bytes::Bytes,
-    config::{self, keys::*, Config, LocalConfig, PeerConfig, CONNECT_TIMEOUT, RENDEZVOUS_PORT},
+    config::{self, Config, LocalConfig, PeerConfig, CONNECT_TIMEOUT, RENDEZVOUS_PORT},
     directories_next,
     futures::future::join_all,
     log,
@@ -169,8 +170,9 @@ pub fn get_option<T: AsRef<str>>(key: T) -> String {
                 return v.to_owned();
             }
         }
-        // svahost: Fall back to Config::get_option for defaults —
-        // IPC-synced OPTIONS may miss keys stripped by purify_options.
+        // svahost: 回退到 Config::get_option 取默认值。
+        // IPC 同步过来的 OPTIONS 会丢掉被 purify_options 剔除的键
+        //（值等于 DEFAULT_SETTINGS 的项，例如 hide-tray）。
         Config::get_option(key.as_ref())
     }
     #[cfg(any(target_os = "android", target_os = "ios"))]
@@ -188,11 +190,11 @@ pub fn use_texture_render() -> bool {
 
     #[cfg(target_os = "macos")]
     return cfg!(feature = "flutter")
-        && LocalConfig::get_option(config::keys::OPTION_TEXTURE_RENDER) == "Y";
+        && LocalConfig::get_option(keys::OPTION_TEXTURE_RENDER) == "Y";
 
     #[cfg(target_os = "linux")]
     return cfg!(feature = "flutter")
-        && LocalConfig::get_option(config::keys::OPTION_TEXTURE_RENDER) != "N";
+        && LocalConfig::get_option(keys::OPTION_TEXTURE_RENDER) != "N";
 
     #[cfg(target_os = "windows")]
     {
@@ -205,9 +207,9 @@ pub fn use_texture_render() -> bool {
         #[cfg(not(debug_assertions))]
         let default_texture = crate::platform::is_win_10_or_greater();
         if default_texture {
-            LocalConfig::get_option(config::keys::OPTION_TEXTURE_RENDER) != "N"
+            LocalConfig::get_option(keys::OPTION_TEXTURE_RENDER) != "N"
         } else {
-            return LocalConfig::get_option(config::keys::OPTION_TEXTURE_RENDER) == "Y";
+            return LocalConfig::get_option(keys::OPTION_TEXTURE_RENDER) == "Y";
         }
     }
 }
@@ -410,6 +412,26 @@ pub fn get_sound_inputs() -> Vec<String> {
     a
 }
 
+/// svahost: 通知托盘进程显示/隐藏托盘图标。
+/// Windows 下托盘运行在独立的 `--tray` 进程中，通过 IPC 通知。
+#[cfg(windows)]
+pub fn send_to_tray(hide: bool) {
+    // 直接写入配置，保证托盘进程启动时能读到最新值
+    Config::set_option(
+        keys::OPTION_HIDE_TRAY.to_string(),
+        if hide { "Y".to_string() } else { "N".to_string() },
+    );
+    // 通过 IPC 通知正在运行的托盘进程
+    std::thread::spawn(move || {
+        let rt = hbb_common::tokio::runtime::Runtime::new().unwrap();
+        rt.block_on(async move {
+            if let Ok(mut c) = ipc::connect(1000, "hide-tray").await {
+                c.send(&ipc::Data::HideTray(hide)).await.ok();
+            }
+        });
+    });
+}
+
 #[inline]
 pub fn set_options(m: HashMap<String, String>) {
     #[cfg(not(any(target_os = "android", target_os = "ios")))]
@@ -422,24 +444,6 @@ pub fn set_options(m: HashMap<String, String>) {
 }
 
 #[inline]
-/// svahost: Notify service process to show/hide tray icon.
-/// On Windows, the tray runs as a separate `--tray` process.
-/// svahost: Notify tray process to show/hide tray icon via IPC.
-#[cfg(windows)]
-pub fn send_to_tray(hide: bool) {
-    // Write directly to config so tray startup check reads the latest value
-    Config::set_option("hide-tray".to_string(), if hide { "Y".to_string() } else { "N".to_string()});
-    // Send IPC message to the tray process
-    std::thread::spawn(move || {
-        let rt = tokio::runtime::Runtime::new().unwrap();
-        rt.block_on(async move {
-            if let Ok(mut c) = ipc::connect(1000, "hide-tray").await {
-                c.send(&ipc::Data::HideTray(hide)).await.ok();
-            }
-        });
-    });
-}
-
 pub fn set_option(key: String, value: String) {
     if &key == "stop-service" {
         #[cfg(target_os = "macos")]
@@ -467,7 +471,8 @@ pub fn set_option(key: String, value: String) {
     } else if &key == "audio-input" {
         #[cfg(not(target_os = "ios"))]
         crate::audio_service::restart();
-    } else if &key == "hide-tray" {
+    } else if &key == keys::OPTION_HIDE_TRAY {
+        // svahost: 设置 hide-tray 时，动态隐藏或显示托盘图标
         #[cfg(windows)]
         {
             let hide = value == "Y";
@@ -738,7 +743,6 @@ pub fn is_can_input_monitoring(_prompt: bool) -> bool {
 
 #[inline]
 pub fn get_error() -> String {
-    #[cfg(not(any(feature = "cli")))]
     #[cfg(target_os = "linux")]
     {
         let dtype = crate::platform::linux::get_display_server();
@@ -929,12 +933,37 @@ pub fn get_async_job_status() -> String {
 #[inline]
 pub fn get_langs() -> String {
     use serde_json::json;
+    let hide_cjk = crate::lang::cjk_ui_unavailable();
     let mut x: Vec<(&str, String)> = crate::lang::LANGS
         .iter()
+        .filter(|a| !hide_cjk || !crate::lang::is_cjk_lang(a.0))
         .map(|a| (a.0, format!("{} ({})", a.1, a.0)))
         .collect();
     x.sort_by(|a, b| a.0.cmp(b.0));
     json!(x).to_string()
+}
+
+// Preserve relative paths for existing configurations and only remove accidental
+// surrounding whitespace. Config values are not shell-expanded (for example, `~`).
+fn trim_video_save_directory(value: &str) -> Option<&str> {
+    let value = value.trim();
+    if !value.is_empty() {
+        Some(value)
+    } else {
+        None
+    }
+}
+
+// A Windows service typically runs with System32 as its working directory, so
+// require an absolute path to avoid resolving recordings there unexpectedly.
+#[cfg(any(windows, test))]
+fn validate_windows_service_video_save_directory(value: &str) -> Option<&str> {
+    let value = trim_video_save_directory(value)?;
+    if std::path::Path::new(value).is_absolute() {
+        Some(value)
+    } else {
+        None
+    }
 }
 
 #[inline]
@@ -956,6 +985,15 @@ pub fn video_save_directory(root: bool) -> String {
         // Currently, only installed windows run as root
         #[cfg(windows)]
         {
+            let dir = Config::get_option(OPTION_WINDOWS_SERVICE_VIDEO_SAVE_DIRECTORY);
+            if let Some(dir) = validate_windows_service_video_save_directory(&dir) {
+                return dir.to_owned();
+            }
+            if !dir.trim().is_empty() {
+                log::warn!(
+                    "Ignoring {OPTION_WINDOWS_SERVICE_VIDEO_SAVE_DIRECTORY}: path must be absolute"
+                );
+            }
             let drive = std::env::var("SystemDrive").unwrap_or("C:".to_owned());
             let dir =
                 std::path::PathBuf::from(format!("{drive}\\ProgramData\\{appname}\\recording",));
@@ -967,8 +1005,8 @@ pub fn video_save_directory(root: bool) -> String {
     let dir = LocalConfig::get_option_from_file(OPTION_VIDEO_SAVE_DIRECTORY);
     #[cfg(not(any(target_os = "linux", target_os = "macos")))]
     let dir = LocalConfig::get_option(OPTION_VIDEO_SAVE_DIRECTORY);
-    if !dir.is_empty() {
-        return dir;
+    if let Some(dir) = trim_video_save_directory(&dir) {
+        return dir.to_owned();
     }
     #[cfg(any(target_os = "android", target_os = "ios"))]
     if let Ok(home) = config::APP_HOME_DIR.read() {
@@ -1730,4 +1768,42 @@ pub fn is_remote_modify_enabled_by_control_permissions() -> Option<bool> {
     *IS_REMOTE_MODIFY_ENABLED_BY_CONTROL_PERMISSIONS
         .lock()
         .unwrap()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{trim_video_save_directory, validate_windows_service_video_save_directory};
+
+    #[test]
+    fn trim_configured_video_save_directory() {
+        assert_eq!(
+            trim_video_save_directory("  relative/recordings  "),
+            Some("relative/recordings")
+        );
+        assert_eq!(trim_video_save_directory("  "), None);
+    }
+
+    #[test]
+    fn validate_service_video_save_directory() {
+        let absolute = if cfg!(windows) {
+            r"C:\recordings"
+        } else {
+            "/recordings"
+        };
+        let padded = format!("  {absolute}  ");
+
+        assert_eq!(
+            validate_windows_service_video_save_directory(&padded),
+            Some(absolute)
+        );
+        assert_eq!(
+            validate_windows_service_video_save_directory("recordings"),
+            None
+        );
+        assert_eq!(
+            validate_windows_service_video_save_directory(&format!("\"{absolute}\"")),
+            None
+        );
+        assert_eq!(validate_windows_service_video_save_directory("  "), None);
+    }
 }

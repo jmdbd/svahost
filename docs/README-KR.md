@@ -5,7 +5,7 @@
   <a href="#파일_구조">구조</a> •
   <a href="#스크린샷">스냅샷</a><br>
   [<a href="../README.md">English</a>] | [<a href="README-UA.md">Українська</a>] | [<a href="README-CS.md">česky</a>] | [<a href="README-ZH.md">中文</a>] | [<a href="README-HU.md">Magyar</a>] | [<a href="README-ES.md">Español</a>] | [<a href="README-FA.md">فارسی</a>] | [<a href="README-FR.md">Français</a>] | [<a href="README-DE.md">Deutsch</a>] | [<a href="README-PL.md">Polski</a>] | [<a href="README-ID.md">Indonesian</a>] | [<a href="README-FI.md">Suomi</a>] | [<a href="README-ML.md">മലയാളം</a>] | [<a href="README-JP.md">日本語</a>] | [<a href="README-NL.md">Nederlands</a>] | [<a href="README-IT.md">Italiano</a>] | [<a href="README-RU.md">Русский</a>] | [<a href="README-PTBR.md">Português (Brasil)</a>] | [<a href="README-EO.md">Esperanto</a>] | [<a href="README-KR.md">한국어</a>] | [<a href="README-AR.md">العربي</a>] | [<a href="README-VN.md">Tiếng Việt</a>] | [<a href="README-DA.md">Dansk</a>] | [<a href="README-GR.md">Ελληνικά</a>] | [<a href="README-TR.md">Türkçe</a>] | [<a href="README-NO.md">Norsk</a>] | [<a href="README-RO.md">Română</a>]<br>
-  <b>이 README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">RustDesk UI</a> 및 <a href="https://github.com/rustdesk/doc.vlanl.com">RustDesk 문서</a>를 귀하의 모국어로 번역하는 데 도움이 필요합니다</b>
+  <b>이 README, <a href="https://github.com/rustdesk/rustdesk/tree/master/src/lang">RustDesk UI</a> 및 <a href="https://github.com/rustdesk/doc.rustdesk.com">RustDesk 문서</a>를 귀하의 모국어로 번역하는 데 도움이 필요합니다</b>
 </p>
 
 > [!Caution]
@@ -15,9 +15,9 @@
 
 우리와 채팅: [Discord](https://discord.gg/nDceKgxnkV) | [Twitter](https://twitter.com/rustdesk) | [Reddit](https://www.reddit.com/r/rustdesk) | [YouTube](https://www.youtube.com/@rustdesk)
 
-[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-%EA%B3%A0%EA%B8%89%20%EA%B8%B0%EB%8A%A5-blue)](https://vlanl.com/pricing.html)
+[![RustDesk Server Pro](https://img.shields.io/badge/RustDesk%20Server%20Pro-%EA%B3%A0%EA%B8%89%20%EA%B8%B0%EB%8A%A5-blue)](https://rustdesk.com/pricing.html)
 
-또 하나의 원격 데스크톱 솔루션으로, Rust로 작성되었습니다. 별도의 설정 없이 바로 사용할 수 있습니다. 데이터에 대한 완전한 통제권을 가지며 보안에 대한 걱정이 없습니다. 저희 랑데부/릴레이 서버를 사용하거나, [직접 설정](https://vlanl.com/server)하거나, [자신만의 랑데부/릴레이 서버를 작성](https://github.com/rustdesk/rustdesk-server-demo)할 수 있습니다.
+또 하나의 원격 데스크톱 솔루션으로, Rust로 작성되었습니다. 별도의 설정 없이 바로 사용할 수 있습니다. 데이터에 대한 완전한 통제권을 가지며 보안에 대한 걱정이 없습니다. 저희 랑데부/릴레이 서버를 사용하거나, [직접 설정](https://rustdesk.com/server)하거나, [자신만의 랑데부/릴레이 서버를 작성](https://github.com/rustdesk/rustdesk-server-demo)할 수 있습니다.
 
 ![image](https://user-images.githubusercontent.com/71636191/171661982-430285f0-2e12-4b1d-9957-4a58e375304d.png)
 
@@ -57,7 +57,7 @@ Sciter 동적 라이브러리를 직접 다운로드하세요.
 
 - `cargo run` 실행
 
-## [빌드](https://vlanl.com/docs/en/dev/build/)
+## [빌드](https://rustdesk.com/docs/en/dev/build/)
 
 ## Linux에서 빌드하는 방법
 
@@ -66,19 +66,19 @@ Sciter 동적 라이브러리를 직접 다운로드하세요.
 ```sh
 sudo apt install -y zip g++ gcc git curl wget nasm yasm libgtk-3-dev clang libxcb-randr0-dev libxdo-dev \
         libxfixes-dev libxcb-shape0-dev libxcb-xfixes0-dev libasound2-dev libpulse-dev cmake make \
-        libclang-dev ninja-build libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libpam0g-dev
+        libclang-dev ninja-build libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 ```
 
 ### openSUSE Tumbleweed
 
 ```sh
-sudo zypper install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libXfixes-devel cmake alsa-lib-devel gstreamer-devel gstreamer-plugins-base-devel xdotool-devel pam-devel
+sudo zypper install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libXfixes-devel cmake alsa-lib-devel gstreamer-devel gstreamer-plugins-base-devel xdotool-devel
 ```
 
 ### Fedora 28 (CentOS 8)
 
 ```sh
-sudo yum -y install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel cmake alsa-lib-devel gstreamer1-devel gstreamer1-plugins-base-devel pam-devel
+sudo yum -y install gcc-c++ git curl wget nasm yasm gcc gtk3-devel clang libxcb-devel libxdo-devel libXfixes-devel pulseaudio-libs-devel cmake alsa-lib-devel gstreamer1-devel gstreamer1-plugins-base-devel
 ```
 
 ### Arch (Manjaro)
@@ -168,7 +168,6 @@ RustDesk 리포지토리의 루트에서 이러한 명령을 실행하고 있는
 - **[src/rendezvous_mediator.rs](https://github.com/rustdesk/rustdesk/tree/master/src/rendezvous_mediator.rs)**: [rustdesk-server](https://github.com/rustdesk/rustdesk-server)와 통신, 원격 다이렉트 (TCP 홀 펀칭) 또는 릴레이 연결 대기
 - **[src/platform](https://github.com/rustdesk/rustdesk/tree/master/src/platform)**: 플랫폼별 코드
 - **[flutter](https://github.com/rustdesk/rustdesk/tree/master/flutter)**: 데스크톱 및 모바일용 Flutter 코드
-- **[flutter/web/js](https://github.com/rustdesk/rustdesk/tree/master/flutter/web/v1/js)**: Flutter 웹 클라이언트용 JavaScript
 
 ## 스크린샷
 
