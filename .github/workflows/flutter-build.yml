@@ -375,9 +375,13 @@ jobs:
           pushd ./libs/portable
           pip3 install -r requirements.txt
           python3 ./generate.py -f ../../rustdesk/ -o . -e ../../rustdesk/svahost.exe
+          # Diagnostic: the launcher embeds this blob via include_bytes!. If it is
+          # missing or empty the built exe is an inert stub of a few hundred KB.
+          ls -l ./data.bin
           popd
           mkdir -p ./SignOutput
           mv ./target/release/svahost-portable-packer.exe ./SignOutput/svahost-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
+          ls -l ./SignOutput/svahost-${{ env.VERSION }}-${{ matrix.job.arch }}.exe
 
       - name: Add MSBuild to PATH
         uses: microsoft/setup-msbuild@6fb02220983dee41ce7ae257b6f4d8f9bf5ed4ce # v2
@@ -609,9 +613,13 @@ jobs:
           pushd ./libs/portable
           pip3 install -r requirements.txt
           python3 ./generate.py -f ../../Release/ -o . -e ../../Release/rustdesk.exe
+          # Diagnostic: the launcher embeds this blob via include_bytes!. If it is
+          # missing or empty the built exe is an inert stub of a few hundred KB.
+          ls -l ./data.bin
           popd
           mkdir -p ./SignOutput
           mv ./target/release/svahost-portable-packer.exe ./SignOutput/svahost-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.exe
+          ls -l ./SignOutput/svahost-${{ env.VERSION }}-${{ matrix.job.arch }}-sciter.exe
 
       - name: Sign rustdesk self-extracted file
         if: env.UPLOAD_ARTIFACT == 'true' && env.SIGN_BASE_URL != '-2'

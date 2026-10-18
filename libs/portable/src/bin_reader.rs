@@ -17,7 +17,10 @@ const PACKAGE_RESOURCE_NAME: &str = "RDPKG";
 // 4bytes
 const LENGTH: usize = 4;
 const IDENTIFIER: &[u8] = b"svahost";
-const IDENTIFIER_LENGTH: usize = 10;
+// MUST track IDENTIFIER exactly: parse() compares a slice of this many bytes
+// against IDENTIFIER, so any mismatch silently makes every blob unreadable.
+// Deriving it keeps branded builds (whose name length differs) self-consistent.
+const IDENTIFIER_LENGTH: usize = IDENTIFIER.len();
 const MD5_LENGTH: usize = 32;
 const BUF_SIZE: usize = 4096;
 
